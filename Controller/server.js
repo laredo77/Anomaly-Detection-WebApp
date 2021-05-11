@@ -1,9 +1,9 @@
 const http=require('http');
 const fs=require('fs')
-const model =require('/Model/SearchInFile')
+const model =require('../Model/SearchInFile')
 
 function displayFormCommand(req, res){
-    fs.readFile('/View/index.html','utf8',(err,data)=>{
+    fs.readFile('../View/index.html','utf8',(err,data)=>{
         if(err)
             console.log(err)
         else
