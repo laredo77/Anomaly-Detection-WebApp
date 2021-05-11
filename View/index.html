@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script
+            src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.js">
+    </script>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="fileCSS.css">
     <title>Title</title>
@@ -8,35 +11,60 @@
 </head>
 <body>
 <div class="bg">
-<form action="/search" method="post" enctype="multipart/form-data" name="searchForm" target="result"></form>
-<table>
-    <tr>
-        <td><input type="submit"></td>
-    </tr>
-    <tr>
-        <td>browse file1:</td>
-        <td><input type="file" name="text_file"></td>
-    </tr>
-    <tr>
-        <td>browse file2:</td>
-        <td><input type="file" name="text_file"></td>
-    </tr>
-</table>
+    <form action="/search" method="post" enctype="multipart/form-data" name="searchForm" target="result"></form>
+    <table>
+        <tr>
+            <td><input type="submit"></td>
+        </tr>
+        <tr>
+            <td>browse file1:</td>
+            <td><input type="file" name="text_file"></td>
+        </tr>
+        <tr>
+            <td>browse file2:</td>
+            <td><input type="file" name="text_file"></td>
+        </tr>
+    </table>
 
-<div class="Algo-menu" >
-    <a href="#" class="active" >Algo-Menu</a>
-    <a href="#">Link 1</a>
-    <a href="#">Link 2</a>
-    <a href="#">Link 3</a>
-    <a href="#">Link 4</a>
-    <a href="#">Link 5</a>
-    <a href="#">Link 6</a>
-    <a href="#">Link 7</a>
-    <a href="#">Link 8</a>
-    <a href="#">Link 9</a>
-    <a href="#">Link 10</a>
-</div>
-<iframe name="result"></iframe>
+    <div class="Algo-menu">
+        <a href="#" class="active">Algo-Menu</a>
+        <a href="#">Link 1</a>
+        <a href="#">Link 2</a>
+        <a href="#">Link 3</a>
+        <a href="#">Link 4</a>
+        <a href="#">Link 5</a>
+        <a href="#">Link 6</a>
+        <a href="#">Link 7</a>
+        <a href="#">Link 8</a>
+        <a href="#">Link 9</a>
+        <a href="#">Link 10</a>
+    </div>
+    <canvas id="myChart" style="width:50%;max-width:600px"></canvas>
+    <script>
+        var xValues = [50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150];
+        var yValues = [7, 8, 8, 9, 9, 9, 10, 11, 14, 14, 15];
+
+        new Chart("myChart", {
+            type: "line",
+            data: {
+                labels: xValues,
+                datasets: [{
+                    color: "rgba(252,252,252,10)",
+                    fill: false,
+                    lineTension: 0,
+                    backgroundColor: "rgb(232,191,252)",
+                    borderColor: "rgba(252,252,252,10)",
+                    data: yValues
+                }]
+            },
+            options: {
+                legend: {display: false},
+                scales: {
+                    yAxes: [{ticks: {min: 6, max: 16}}],
+                }
+            }
+        });
+    </script>
 </div>
 </body>
 </html>
