@@ -1,0 +1,41 @@
+.Algo-menu {
+    width: 150px;
+    height: 200px;
+    overflow-y: auto;
+}
+
+.Algo-menu a {
+    background-color: #eee;
+    color: black;
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.Algo-menu a:hover {
+    background-color: #e0a1e0;
+}
+
+.Algo-menu a.active {
+    background-color: #4e004e;
+    color: white;
+}
+iframe {
+    width: 700px;
+    height: 300px;
+    position:absolute;
+    left: 0px;
+    bottom: 0px;
+}
+body, html {
+    height: 100%;
+    margin: 0;
+}
+
+.bg {
+    background-image: url("wallpaper2.jpg");
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
