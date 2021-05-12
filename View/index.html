@@ -1,9 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns="http://www.w3.org/1999/html">
 <head>
-    <script
-            src="https://www.gstatic.com/charts/loader.js">
-    </script>
+    <!-- Load plotly.js into the DOM -->
+    <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="fileCSS.css">
     <title>Title</title>
@@ -11,50 +10,60 @@
 </head>
 <body>
 <div class="bg">
-    <form action="/search" method="post" enctype="multipart/form-data" name="searchForm" target="result"></form>
-    <table>
-        <tr>
-            <td><input type="submit"></td>
-        </tr>
-        <tr>
-            <td>browse file1:</td>
-            <td><input type="file" name="text_file"></td>
-        </tr>
-        <tr>
-            <td>browse file2:</td>
-            <td><input type="file" name="text_file"></td>
-        </tr>
-    </table>
-
-    <div class="Algo-menu">
-        <a href="#" class="active">Algo-Menu</a>
-        <a href="linear-reg">Linear reg</a>
-        <a href="hybrid-algorithm">Hybrid algorithm</a>
-    </div>
-    <div id="myChart" style="width:100%; max-width:600px; height:500px;"></div>
-    <script>
-        google.charts.load('current', {packages: ['corechart']});
-        google.charts.setOnLoadCallback(drawChart);
-
-        function drawChart() {
-// Set Data
-            var data = google.visualization.arrayToDataTable([
-                ['Price', 'Size'],
-                [50, 7], [60, 8], [70, 8], [80, 9], [90, 9],
-                [100, 9], [110, 10], [120, 11],
-                [130, 14], [140, 14], [150, 15]
-            ]);
-// Set Options
-            var options = {
-                title: 'House Prices vs. Size',
-                hAxis: {title: 'Square Meters'},
-                vAxis: {title: 'Price in Millions'},
-            };
-// Draw
-            var chart = new google.visualization.LineChart(document.getElementById('myChart'));
-            chart.draw(data, options);
+<div class="relative" id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+<script>
+    var trace1 = {
+        x: [1, 2, 3, 4, 5],
+        y: [1, 3, 2, 3, 1],
+        mode: 'lines',
+        name: 'Solid',
+        line: {
+            dash: 'solid',
+            width: 4
         }
-    </script>
+    };
+    var data = [trace1];
+
+    var layout = {
+        title: 'Line Dash',
+        xaxis: {
+            range: [0.75, 5.25],
+            autorange: false
+        },
+        yaxis: {
+            range: [0, 18.5],
+            autorange: false
+        },
+        legend: {
+            y: 0.5,
+            traceorder: 'reversed',
+            font: {
+                size: 16
+            }
+        }
+    };
+    Plotly.newPlot('myDiv', data, layout);
+</script>
+<form action="/search" method="post" enctype="multipart/form-data" name="searchForm" target="result"></form>
+<table>
+    <tr>
+        <td><input type="submit"></td>
+    </tr>
+    <tr>
+        <td>browse file1:</td>
+        <td><input type="file" name="text_file"></td>
+    </tr>
+    <tr>
+        <td>browse file2:</td>
+        <td><input type="file" name="text_file"></td>
+    </tr>
+</table>
+
+<div class="Algo-menu">
+    <a href="#" class="active">Algo-Menu</a>
+    <a href="linear-reg">Linear reg</a>
+    <a href="hybrid-algorithm">Hybrid algorithm</a>
+</div>
 </div>
 </body>
 </html>
