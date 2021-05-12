@@ -1,31 +1,30 @@
-const http=require('http');
-const fs=require('fs')
-const model =require('../Model/SearchInFile')
+const express = require('express')
+const fileUpload = require('express-fileupload')
+const querystring = require('querystring');
+const model = require('../model/SearchInFile')
 
-function displayFormCommand(req, res){
-    fs.readFile('../View/index.html','utf8',(err,data)=>{
-        if(err)
-            console.log(err)
-        else
-            res.write(data)
-            res.end()
-    })
-}
-
-function searchTextCommand(req,res){
-    var result = model.searchText('hello', 'hello world\n good bye\n')
-    res.write(result)
-    res.end()
-}
-
-let commands = new Map()
-commands.set('/',displayFormCommand)
-commands.set('/search', searchTextCommand)
-
-const server = http.createServer((req,res)=>{
-    if(commands.has(req.url))
-        commands.get(req.url)(req,res)
-    else
-        res.write("Invalid request")
+const app = express()
+app.use(express.urlencoded({
+    extended: false
+}))
+app.use(fileUpload())
+app.use(express.static('../view'))
+app.get("/", (req, res) => {
+    res.sendFile("./index.html")
 })
-server.listen(8080, ()=>console.log("server started on port 8080"))
+app.post("/search", (req, res) => {
+    res.write('searching for ' + req.body.key + ':\n')
+    var key = req.body.key
+    if(req.files) {
+        var file = req.files.text_file
+        var result = model.searchText(key, file.data.toString())
+        res.write(result)
+    }
+    res.end()
+})
+
+app.post("/api/model", (req, res) => {
+    const model_type = req.query.id;
+})
+
+app.listen(8080)

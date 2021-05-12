@@ -1,7 +1,7 @@
 function  searchText(key, text){
-    let result=''
+    var result=''
     text.split("\n").forEach(row=>{
-        if(row.search(key) !== -1)
+        if(row.search(key) != -1)
             result+= row+'\n'
     })
     return result
