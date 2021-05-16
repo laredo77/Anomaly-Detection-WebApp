@@ -1,11 +1,13 @@
 #include "SimpleAsyncWorker.h"
 
 Value runSimpleAsyncWorker(const CallbackInfo& info) {
-    int runTime = info[0].As<Number>();
-    Function callback = info[1].As<Function>();
-    SimpleAsyncWorker* asyncWorker = new SimpleAsyncWorker(callback, runTime);
+    std::string algo_type = info[0].As<String>();
+    std::string csv_train = info[1].As<String>();
+    std::string csv_detect = info[2].As<String>();
+    Function callback = info[3].As<Function>();
+    SimpleAsyncWorker* asyncWorker = new SimpleAsyncWorker(callback,csv_train,csv_detect,algo_type);
     asyncWorker->Queue();
-    std::string msg = "SimpleAsyncWorker for " + std::to_string(runTime) + " seconds queued.";
+    std::string msg = "SimpleAsyncWorker for " + algo_type;
     return String::New(info.Env(),msg.c_str());
 };
 

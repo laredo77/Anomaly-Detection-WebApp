@@ -126,6 +126,11 @@
   <ItemGroup>
     <ClCompile Include="..\runSimpleAsyncWorker.cpp"/>
     <ClCompile Include="..\SimpleAsyncWorker.cpp"/>
+    <ClCompile Include="..\anomaly_detection_util.cpp"/>
+    <ClCompile Include="..\HybridAnomalyDetector.cpp"/>
+    <ClCompile Include="..\SimpleAnomalyDetector.cpp"/>
+    <ClCompile Include="..\timeseries.cpp"/>
+    <ClCompile Include="..\minCircle.cpp"/>
     <ClCompile Include="C:\Users\maoz\AppData\Roaming\npm\node_modules\node-gyp\src\win_delay_load_hook.cc"/>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets"/>

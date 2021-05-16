@@ -1,9 +1,4 @@
-/*
- * SimpleAnomalyDetector.cpp
- *
- *  Created on: 8 срхїз 2020
- *      Author: Eli
- */
+
 
 #include "SimpleAnomalyDetector.h"
 
@@ -35,34 +30,35 @@ float SimpleAnomalyDetector::findThreshold(Point** ps,size_t len,Line rl){
 }
 
 void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts){
-	vector<string> atts=ts.gettAttributes();
-	size_t len=ts.getRowSize();
-	float vals[atts.size()][len];
-	for(size_t i=0;i<atts.size();i++){
-		vector<float> x=ts.getAttributeData(atts[i]);
-		for(size_t j=0;j<len;j++){
-			vals[i][j]=x[j];
+	vector<string> atts = ts.gettAttributes();
+	size_t len = ts.getRowSize();
+	vector<float> rows(atts.size());
+	vector<vector<float>> vals(atts.size(), vector<float>(len));
+
+	for (size_t i = 0; i < atts.size(); i++) {
+		vector<float> x = ts.getAttributeData(atts[i]);
+		for (size_t j = 0; j < len; j++) {
+			vals[i][j] = x[j];
 		}
 	}
 
-	for(size_t i=0;i<atts.size();i++){
-		string f1=atts[i];
-		float max=0;
-		size_t jmax=0;
-		for(size_t j=i+1;j<atts.size();j++){
-			float p=abs(pearson(vals[i],vals[j],len));
-			if(p>max){
-				max=p;
-				jmax=j;
+	for (size_t i = 0; i < atts.size(); i++) {
+		string f1 = atts[i];
+		float max = 0;
+		size_t jmax = 0;
+		for (size_t j = i + 1; j < atts.size(); j++) {
+			float p = abs(pearson(&vals[i][0], &vals[j][0], len));
+			if (p > max) {
+				max = p;
+				jmax = j;
 			}
 		}
-		string f2=atts[jmax];
-		Point** ps=toPoints(ts.getAttributeData(f1),ts.getAttributeData(f2));
-
-		learnHelper(ts,max,f1,f2,ps);
+		string f2 = atts[jmax];
+		Point** ps = toPoints(ts.getAttributeData(f1), ts.getAttributeData(f2));
+		learnHelper(ts, max, f1, f2, ps);
 
 		// delete points
-		for(size_t k=0;k<len;k++)
+		for (size_t k = 0; k < len; k++)
 			delete ps[k];
 		delete[] ps;
 	}

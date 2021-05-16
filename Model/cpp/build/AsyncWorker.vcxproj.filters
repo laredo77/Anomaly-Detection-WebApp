@@ -7,6 +7,21 @@
     <Filter Include="..">
       <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="..">
+      <UniqueIdentifier>{739DB09A-CC57-A953-A6CF-F64FA08E4FA7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="C:">
       <UniqueIdentifier>{7B735499-E5DD-1C2B-6C26-70023832A1CF}</UniqueIdentifier>
     </Filter>
@@ -43,6 +58,21 @@
       <Filter>..</Filter>
     </ClCompile>
     <ClCompile Include="..\SimpleAsyncWorker.cpp">
+      <Filter>..</Filter>
+    </ClCompile>
+    <ClCompile Include="..\anomaly_detection_util.cpp">
+      <Filter>..</Filter>
+    </ClCompile>
+    <ClCompile Include="..\HybridAnomalyDetector.cpp">
+      <Filter>..</Filter>
+    </ClCompile>
+    <ClCompile Include="..\SimpleAnomalyDetector.cpp">
+      <Filter>..</Filter>
+    </ClCompile>
+    <ClCompile Include="..\timeseries.cpp">
+      <Filter>..</Filter>
+    </ClCompile>
+    <ClCompile Include="..\minCircle.cpp">
       <Filter>..</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\maoz\AppData\Roaming\npm\node_modules\node-gyp\src\win_delay_load_hook.cc">

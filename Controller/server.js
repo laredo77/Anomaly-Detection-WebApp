@@ -30,3 +30,15 @@ app.post("/api/model", (req, res) => {
 })
 
 app.listen(8080)
+
+
+
+function AsyncWorkerCompletion (err, result) {
+    if (err) {
+        console.log("SimpleAsyncWorker returned an error: ", err);
+    } else {
+        console.log("SimpleAsyncWorker returned '"+result+"'.");
+        // data.push(result[0]);
+        console.log(JSON.stringify(result));        
+    }
+};

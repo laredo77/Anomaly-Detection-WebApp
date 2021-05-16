@@ -1,53 +1,47 @@
-/*
- * timeseries.h
- *
- *  Created on: 26 срхїз 2020
- *      Author: Eli
- */
 
 #ifndef TIMESERIES_H_
 #define TIMESERIES_H_
 #include <iostream>
 #include <string.h>
+#include <string>
+#include <sstream>
 #include <fstream>
-#include<map>
+#include <map>
 #include <vector>
-#include <string.h>
-#include <bits/stdc++.h>
 #include <algorithm>
 
 using namespace std;
 
-class TimeSeries{
+class TimeSeries {
 
 
-	map<string,vector<float>> ts;
+	map<string, vector<float>> ts;
 	vector<string> atts;
 	size_t dataRowSize;
 public:
 
 
-	TimeSeries(const char* CSVfileName){
+	TimeSeries(const char* CSVfileName) {
 		ifstream in(CSVfileName);
 		string head;
-		in>>head;
+		in >> head;
 		string att;
 		stringstream hss(head);
-		while(getline(hss,att,',')){
+		while (getline(hss, att, ',')) {
 			vector<float> v;
-		     ts[att]=v;
-		     atts.push_back(att);
+			ts[att] = v;
+			atts.push_back(att);
 		}
 
-		while(!in.eof()){
+		while (!in.eof()) {
 			string line;
-			in>>line;
+			in >> line;
 			string val;
 			stringstream lss(line);
-			int i=0;
-			while(getline(lss,val,',')){
+			int i = 0;
+			while (getline(lss, val, ',')) {
 				ts[atts[i]].push_back(stof(val));
-			     i++;
+				i++;
 			}
 		}
 		in.close();
@@ -56,19 +50,19 @@ public:
 
 	}
 
-	const vector<float>& getAttributeData(string name)const{
+	const vector<float>& getAttributeData(string name)const {
 		return ts.at(name);
 	}
 
-	const vector<string>& gettAttributes()const{
+	const vector<string>& gettAttributes()const {
 		return atts;
 	}
 
-	size_t getRowSize()const{
+	size_t getRowSize()const {
 		return dataRowSize;
 	}
 
-	~TimeSeries(){
+	~TimeSeries() {
 
 	}
 };
