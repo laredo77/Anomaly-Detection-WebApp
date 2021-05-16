@@ -1,7 +1,9 @@
 const express = require('express')
 const fileUpload = require('express-fileupload')
 const querystring = require('querystring');
-const model = require('../model/SearchInFile')
+
+// cpp algo
+const runWorker = require('../Model/cpp/build/Release/AsyncWorker');
 
 const app = express()
 app.use(express.urlencoded({
