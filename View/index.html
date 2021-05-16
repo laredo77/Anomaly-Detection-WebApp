@@ -3,7 +3,6 @@
 <head>
     <!-- Load plotly.js into the DOM -->
     <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
-    <script type="text/javascript" src="View/helpers.js"></script>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="fileCSS.css">
     <title>Anomaly Detection Server</title>
@@ -17,8 +16,7 @@
     <table>
         <tr>
             <!--need to give getFilePath() a path not sure if this paths are correct-->
-            <td><input type="submit" onclick="getFilePath(document.getElementById('file1').innerHTML);
-            getFilePath(document.getElementById('file2').innerHTML);"></td>
+            <td><input type="submit"></td>
         </tr>
         <tr>
             <td>browse file1:</td>
@@ -102,7 +100,7 @@
 
     <div class="Algo-menu">
         <a href="#" class="active">Algo-Menu</a>
-        <a onclick="results('LinearReg'); getAlgoName('LinearReg');">Linear reg</a>
+        <a onclick="results('LinearReg')">Linear reg</a>
         <a onclick="results('HybridAlgorithm')">Hybrid algorithm</a>
     </div>
 </div>
