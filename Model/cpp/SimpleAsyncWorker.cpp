@@ -8,15 +8,23 @@ SimpleAsyncWorker::SimpleAsyncWorker(Function &callback, std::string train_path,
 
 void SimpleAsyncWorker::Execute()
 {
-    TimeSeries train(train_path.c_str());
-    TimeSeries anomaly(detect_path.c_str());
-    SimpleAnomalyDetector *detector;
+    //TimeSeries train(train_path.c_str());
+    //TimeSeries anomaly(detect_path.c_str());
+    
+    /*
     if (strcmp(algo_type.c_str(), "LinearReg") == 0)
-        detector = new SimpleAnomalyDetector();
+    {
+        SimpleAnomalyDetector detector;
+        detector.learnNormal(train);
+        anomaly_reports = detector.detect(anomaly);
+    }
     else
-        detector = new HybridAnomalyDetector();
-    detector->learnNormal(train);
-    anomaly_reports = detector->detect(anomaly);
+    {
+        HybridAnomalyDetector detector;
+        detector.learnNormal(train);
+        anomaly_reports = detector.detect(anomaly);
+    }
+    */
 };
 
 void SimpleAsyncWorker::OnOK()
@@ -33,5 +41,7 @@ void SimpleAsyncWorker::OnOK()
         array_of_reports[i++] = obj;
     }
     // return javascript array
-    Callback().Call({Env().Null(), array_of_reports});
+    // Callback().Call({Env().Null(), array_of_reports});
+    std::string msg = detect_path;
+    Callback().Call({Env().Null(), String::New(Env(), msg)});
 };

@@ -3,7 +3,7 @@
 #include "SimpleAsyncWorker.h"
 #include "minCircle.h"
 #include "timeseries.h"
-#include "./HybridAnomalyDetector.h"
+#include "HybridAnomalyDetector.h"
 
 using std::string;
 using namespace Napi;

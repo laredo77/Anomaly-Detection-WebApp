@@ -82,20 +82,27 @@
         }
     }
 </script>
-<form action="/search" method="post" enctype="multipart/form-data" name="searchForm" target="result"></form>
+<form action="/detect" method="POST" enctype="multipart/form-data" name="searchForm">
 <table>
     <tr>
-        <td><input type="submit"></td>
+        <td>browse train file:</td>
+        <td><input type="file" name="text_train" accept=".csv"></td>
     </tr>
     <tr>
-        <td>browse file1:</td>
-        <td><input type="file" name="text_file"></td>
+        <td>browse detect file:</td>
+        <td><input type="file" name="text_detect" accept=".csv"></td>
     </tr>
     <tr>
-        <td>browse file2:</td>
-        <td><input type="file" name="text_file"></td>
+        <input list="Algorithms" name="Algorithm" id="Algorithm">
+        <datalist id="Algorithms">
+            <option value="LinearReg">
+            <option value="HybridAlgorithm">
+        </datalist>
     </tr>
 </table>
+<br>
+<td><input type="submit"></td>
+</form>
 
 <div class="Algo-menu">
     <a href="#" class="active">Algo-Menu</a>

@@ -1,6 +1,8 @@
 const express = require('express')
 const fileUpload = require('express-fileupload')
-const querystring = require('querystring');
+const fs = require('fs');
+const path = require("path");
+
 
 // cpp algo
 const runWorker = require('../Model/cpp/build/Release/AsyncWorker');
@@ -14,15 +16,31 @@ app.use(express.static('../view'))
 app.get("/", (req, res) => {
     res.sendFile("./index.html")
 })
-app.post("/search", (req, res) => {
-    res.write('searching for ' + req.body.key + ':\n')
-    var key = req.body.key
-    if(req.files) {
-        var file = req.files.text_file
-        var result = model.searchText(key, file.data.toString())
-        res.write(result)
+app.post("/detect", (req, res) => {
+    // res.write('searching for ' + req.body.key + ':\n')
+
+    if (req.files) {
+        var csv_train = req.files.text_train
+        var csv_detect = req.files.text_detect
+        var algo_type = req.body.Algorithm
+
+
+        // write csv file
+        fs.writeFile(csv_train.name, csv_train.data.toString(), function (err) {
+            if (err)
+                return console.log(err);
+            //console.log(path.resolve(csv_train.name));
+        });
+        // write second csv file
+        fs.writeFile(csv_detect.name, csv_detect.data.toString(), function (err) {
+            if (err)
+                return console.log(err);
+            //console.log(path.resolve(csv_detect.name));
+        });
+        result = runWorker.runSimpleAsyncWorker(algo_type, path.resolve(csv_train.name), path.resolve(csv_detect.name), AsyncWorkerCompletion);
+        console.log("runSimpleAsyncWorker returned '" + result + "'.");
     }
-    res.end()
+    // res.end()
 })
 
 app.post("/api/model", (req, res) => {
@@ -33,12 +51,12 @@ app.listen(8080)
 
 
 
-function AsyncWorkerCompletion (err, result) {
+function AsyncWorkerCompletion(err, result) {
     if (err) {
         console.log("SimpleAsyncWorker returned an error: ", err);
     } else {
-        console.log("SimpleAsyncWorker returned '"+result+"'.");
+        console.log("SimpleAsyncWorker returned '" + result + "'.");
         // data.push(result[0]);
-        console.log(JSON.stringify(result));        
+        // console.log(JSON.stringify(result));
     }
 };
