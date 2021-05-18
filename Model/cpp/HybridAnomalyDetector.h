@@ -1,5 +1,8 @@
-
-
+/*
+ * HybridAnomalyDetector.h
+ *
+ * Author: 311547087, Itamar Laredo
+ */
 #ifndef HYBRIDANOMALYDETECTOR_H_
 #define HYBRIDANOMALYDETECTOR_H_
 
@@ -7,12 +10,13 @@
 #include "minCircle.h"
 
 class HybridAnomalyDetector:public SimpleAnomalyDetector {
+
 public:
 	HybridAnomalyDetector();
 	virtual ~HybridAnomalyDetector();
-
-	virtual void learnHelper(const TimeSeries& ts,float p/*pearson*/,string f1, string f2,Point** ps);
-	virtual bool isAnomalous(float x, float y,correlatedFeatures c);
+    virtual float get_threshold();
+    virtual void set_threshold(float threshold);
+    virtual vector<AnomalyReport> get_vAr();
 };
 
 #endif /* HYBRIDANOMALYDETECTOR_H_ */

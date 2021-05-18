@@ -1,32 +1,39 @@
-
+/*
+ * HybridAnomalyDetector.cpp
+ *
+ * Author: 311547087, Itamar Laredo
+ */
 #include "HybridAnomalyDetector.h"
 
 HybridAnomalyDetector::HybridAnomalyDetector() {
-	// TODO Auto-generated constructor stub
-
 }
 
 HybridAnomalyDetector::~HybridAnomalyDetector() {
-	// TODO Auto-generated destructor stub
 }
 
-
-void HybridAnomalyDetector::learnHelper(const TimeSeries& ts,float p/*pearson*/,string f1, string f2,Point** ps){
-	SimpleAnomalyDetector::learnHelper(ts,p,f1,f2,ps);
-	if(p>0.5 && p<threshold){
-		Circle cl = findMinCircle(ps,ts.getRowSize());
-		correlatedFeatures c;
-		c.feature1=f1;
-		c.feature2=f2;
-		c.corrlation=p;
-		c.threshold=cl.radius*1.1; // 10% increase
-		c.cx=cl.center.x;
-		c.cy=cl.center.y;
-		cf.push_back(c);
-	}
+/*
+ * Set new threshold
+ */
+void HybridAnomalyDetector::set_threshold(float threshold) {
+    for(int i = 0; i < this->cf.size(); i++) {
+        this->cf[i].threshold = threshold;
+    }
 }
 
-bool HybridAnomalyDetector::isAnomalous(float x,float y,correlatedFeatures c){
-	return (c.corrlation>=threshold && SimpleAnomalyDetector::isAnomalous(x,y,c)) ||
-			(c.corrlation>0.5 && c.corrlation<threshold && dist(Point(c.cx,c.cy),Point(x,y))>c.threshold);
+/*
+ * Get current threshold
+ */
+float HybridAnomalyDetector::get_threshold() {
+    if (!this->cf.empty()) {
+        return this->cf[0].threshold;
+    }
+    return 0.9;
 }
+
+/*
+ * Get anomaly report vector
+ */
+vector<AnomalyReport> HybridAnomalyDetector::get_vAr() {
+    return this->v_ar;
+}
+

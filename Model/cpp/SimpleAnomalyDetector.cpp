@@ -1,98 +1,125 @@
-
-
+/*
+ * SimpleAnomalyDetector.cpp
+ *
+ * Author: 311547087, Itamar Laredo
+ */
+#include <vector>
+#include "AnomalyDetector.h"
 #include "SimpleAnomalyDetector.h"
 
+
+// Constructor
 SimpleAnomalyDetector::SimpleAnomalyDetector() {
-	threshold = 0.9;
-
+    vector<correlatedFeatures> cf;
 }
 
+// Destructor
 SimpleAnomalyDetector::~SimpleAnomalyDetector() {
-	// TODO Auto-generated destructor stub
 }
 
-Point** SimpleAnomalyDetector::toPoints(vector<float> x, vector<float> y){
-	Point** ps=new Point*[x.size()];
-	for(size_t i=0;i<x.size();i++){
-		ps[i]=new Point(x[i],y[i]);
-	}
-	return ps;
+// Offline learning new data as normal values
+void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
+    TimeSeries time_series = ts;
+    map<std::string, vector<float>> data_s = time_series.get_data_structure();
+
+    // Checks all the correlation combinations
+    for (int i = 0; i < data_s.size() - 1; i++) {
+        for (int j = i + 1; j < data_s.size(); j++) {
+
+            float correlation = std::abs(pearson(
+                    &data_s[time_series.get_features()[i]][0],
+                    &data_s[time_series.get_features()[j]][0],
+                    data_s[time_series.get_features()[i]].size()));
+            // relevant correlation
+            if (correlation > 0.5) {
+                // Initialize Points array
+                Point *ps[data_s[time_series.get_features()[i]].size()];
+                for (int k = 0; k < data_s[time_series.get_features()[i]].size(); k++) {
+                    ps[k] = new Point(data_s[time_series.get_features()[i]][k],
+                                      data_s[time_series.get_features()[j]][k]);
+                }
+                // get linear reg
+                Line lin_reg = linear_reg(ps, data_s[time_series.get_features()[i]].size());
+                // Initialize correlatedFeatures struct with data,
+                // and adding it to cf vector
+                correlatedFeatures cfs = {};
+                cfs.x = 0;
+                cfs.y = 0;
+                cfs.radius = 0;
+                // focus on correlations higher than 0.9
+                if (correlation > 0.9) {
+                    // calculate the max deviation
+                    float max_dev = 0.0;
+                    for (int l = 0; l < data_s[time_series.get_features()[i]].size(); l++) {
+                        if (max_dev < dev(*ps[l], lin_reg)) {
+                            max_dev = dev(*ps[l], lin_reg);
+                        }
+                    }
+                    cfs.threshold = max_dev * 1.1;
+                    // otherwise correlations higher than 0.5
+                } else {
+                    // get minimal circle
+                    Circle c = findMinCircle(ps, data_s[time_series.get_features()[i]].size());
+                    cfs.threshold = c.radius * 1.1;
+                    cfs.x = c.center.x;
+                    cfs.y = c.center.y;
+                    cfs.radius = c.radius;
+                }
+                // initialize the rest of the correlationFeatures struct
+                cfs.feature1 = time_series.get_features()[i];
+                cfs.feature2 = time_series.get_features()[j];
+                cfs.corrlation = correlation;
+                cfs.lin_reg = lin_reg;
+                cf.push_back(cfs);
+
+                // deleting points
+                for (int m = 0; m < data_s[time_series.get_features()[i]].size(); m++) {
+                    delete ps[m];
+                }
+            }
+        }
+    }
 }
 
-float SimpleAnomalyDetector::findThreshold(Point** ps,size_t len,Line rl){
-	float max=0;
-	for(size_t i=0;i<len;i++){
-		float d=abs(ps[i]->y - rl.f(ps[i]->x));
-		if(d>max)
-			max=d;
-	}
-	return max;
-}
+// Online detecting anomaly, and report it
+vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
+    // TODO Auto-generated destructor stub
+    TimeSeries time_series = ts;
+    map<std::string, vector<float>> data_s = time_series.get_data_structure();
 
-void SimpleAnomalyDetector::learnNormal(const TimeSeries& ts){
-	vector<string> atts = ts.gettAttributes();
-	size_t len = ts.getRowSize();
-	vector<float> rows(atts.size());
-	vector<vector<float>> vals(atts.size(), vector<float>(len));
+    for (int i = 0; i < cf.size(); i++) {
+        Point *ps[data_s[cf[i].feature1].size()];
+        for (int j = 0; j < data_s[cf[i].feature1].size(); j++) {
+            ps[j] = new Point(data_s[cf[i].feature1][j], data_s[cf[i].feature2][j]);
+        }
 
-	for (size_t i = 0; i < atts.size(); i++) {
-		vector<float> x = ts.getAttributeData(atts[i]);
-		for (size_t j = 0; j < len; j++) {
-			vals[i][j] = x[j];
-		}
-	}
-
-	for (size_t i = 0; i < atts.size(); i++) {
-		string f1 = atts[i];
-		float max = 0;
-		size_t jmax = 0;
-		for (size_t j = i + 1; j < atts.size(); j++) {
-			float p = abs(pearson(&vals[i][0], &vals[j][0], len));
-			if (p > max) {
-				max = p;
-				jmax = j;
-			}
-		}
-		string f2 = atts[jmax];
-		Point** ps = toPoints(ts.getAttributeData(f1), ts.getAttributeData(f2));
-		learnHelper(ts, max, f1, f2, ps);
-
-		// delete points
-		for (size_t k = 0; k < len; k++)
-			delete ps[k];
-		delete[] ps;
-	}
-}
-
-void SimpleAnomalyDetector::learnHelper(const TimeSeries& ts,float p/*pearson*/,string f1, string f2,Point** ps){
-	if(p>threshold){
-		size_t len=ts.getRowSize();
-		correlatedFeatures c;
-		c.feature1=f1;
-		c.feature2=f2;
-		c.corrlation=p;
-		c.lin_reg=linear_reg(ps,len);
-		c.threshold=findThreshold(ps,len,c.lin_reg)*1.1; // 10% increase
-		cf.push_back(c);
-	}
-}
-
-vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries& ts){
-	vector<AnomalyReport> v;
-	for_each(cf.begin(),cf.end(),[&v,&ts,this](correlatedFeatures c){
-		vector<float> x=ts.getAttributeData(c.feature1);
-		vector<float> y=ts.getAttributeData(c.feature2);
-		for(size_t i=0;i<x.size();i++){
-			if(isAnomalous(x[i],y[i],c)){
-				string d=c.feature1 + "-" + c.feature2;
-				v.push_back(AnomalyReport(d,(i+1)));
-			}
-		}
-	});
-	return v;
-}
-
-
-bool SimpleAnomalyDetector::isAnomalous(float x, float y,correlatedFeatures c){
-	return (abs(y - c.lin_reg.f(x))>c.threshold);
+        // check deviation to each point
+        float dev_p = 0.0;
+        for (int k = 0; k < data_s[cf[i].feature1].size(); k++) {
+            if (cf[i].corrlation > 0.9) {
+                // case used simple detector
+                dev_p = dev(*ps[k], cf[i].lin_reg);
+            } else {
+                // case used min circle detector
+                dev_p = dist(Point(cf[i].x, cf[i].y), *ps[k]);
+            }
+            // check whether the deviation of the current point
+            // is larger than the max deviation
+            if (dev_p > cf[i].threshold) {
+                // if so, reported as anomaly!
+                string desc = cf[i].feature1 + "-" + cf[i].feature2;
+                AnomalyReport aReport = AnomalyReport(desc, (k + 1));
+                this->v_ar.push_back(aReport);
+                string str = to_string(ps[k]->x);
+                str += ",";
+                str += to_string(ps[k]->y);
+                this->anomaly_points.push_back(str);
+            }
+        }
+        // delete points
+        for (int m = 0; m < data_s[time_series.get_features()[i]].size(); m++) {
+            delete ps[m];
+        }
+    }
+    return this->v_ar;
 }

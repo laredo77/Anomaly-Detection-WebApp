@@ -1,9 +1,11 @@
-
+/*
+ * animaly_detection_util.h
+ *
+ * Author: 311547087, Itamar Laredo
+ */
 #ifndef ANOMALYDETECTORUTIL_H_
 #define ANOMALYDETECTORUTIL_H_
 
-#include <stdlib.h>
-#include <math.h>
 
 float avg(float* x, int size);
 
@@ -17,7 +19,7 @@ float cov(float* x,  float* y, int size);
 // returns the Pearson correlation coefficient of X and Y
 float pearson(float* x, float* y, int size);
 
-class Line{
+class Line {
 public:
 	float a,b;
 	Line():a(0),b(0){};
@@ -27,7 +29,7 @@ public:
 	}
 };
 
-class Point{
+class Point {
 public:
 	float x,y;
 	Point(float x, float y):x(x),y(y){}

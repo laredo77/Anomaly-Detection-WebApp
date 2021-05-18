@@ -1,72 +1,38 @@
-
+/*
+ * timeseries.h
+ *
+ * Author: 311547087, Itamar Laredo
+ */
 #ifndef TIMESERIES_H_
 #define TIMESERIES_H_
-#include <iostream>
-#include <string.h>
-#include <string>
-#include <sstream>
-#include <fstream>
-#include <map>
+
 #include <vector>
-#include <algorithm>
+#include <string>
+#include <map>
 
 using namespace std;
 
 class TimeSeries {
-
-
-	map<string, vector<float>> ts;
-	vector<string> atts;
-	size_t dataRowSize;
+private:
+    const char *m_fileName;
+    map<std::string, vector<float>> data_structure;
+    vector<std::string> features;
 public:
+    TimeSeries(string fileName) {
+        const char * CSVfileName = fileName.c_str();
 
+        m_fileName = CSVfileName;
+        data_structure = set_data_structure(CSVfileName);
+    }
+    TimeSeries(const char *CSVfileName) {
+        m_fileName = CSVfileName;
+        data_structure = set_data_structure(CSVfileName);
+    }
 
-	TimeSeries(const char* CSVfileName) {
-		ifstream in(CSVfileName);
-		string head;
-		in >> head;
-		string att;
-		stringstream hss(head);
-		while (getline(hss, att, ',')) {
-			vector<float> v;
-			ts[att] = v;
-			atts.push_back(att);
-		}
-
-		while (!in.eof()) {
-			string line;
-			in >> line;
-			string val;
-			stringstream lss(line);
-			int i = 0;
-			while (getline(lss, val, ',')) {
-				ts[atts[i]].push_back(stof(val));
-				i++;
-			}
-		}
-		in.close();
-
-		dataRowSize = ts[atts[0]].size();
-
-	}
-
-	const vector<float>& getAttributeData(string name)const {
-		return ts.at(name);
-	}
-
-	const vector<string>& gettAttributes()const {
-		return atts;
-	}
-
-	size_t getRowSize()const {
-		return dataRowSize;
-	}
-
-	~TimeSeries() {
-
-	}
+    void add_new_line(const char *fileName, string newLine);
+    map<std::string, vector<float>> get_data_structure();
+    map<std::string, vector<float>> set_data_structure(const char *fileName);
+    vector<string> get_features();
+    int file_size();
 };
-
-
-
 #endif /* TIMESERIES_H_ */
