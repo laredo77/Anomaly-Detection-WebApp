@@ -34,7 +34,9 @@ public:
     virtual ~SimpleAnomalyDetector();
 
     virtual void learnNormal(const TimeSeries &ts);
+    virtual void learnNormalLinear(const TimeSeries &ts);
     virtual vector<AnomalyReport> detect(const TimeSeries &ts);
+    virtual vector<AnomalyReport> detectLinear(const TimeSeries &ts);
 
     // correlated features getter
     vector<correlatedFeatures> getNormalModel() {
