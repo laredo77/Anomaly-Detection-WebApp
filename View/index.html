@@ -12,21 +12,6 @@
 <div class="bg">
     <div class="relative" id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
     <!--not sure we need the next line -->
-    <form action="/search" method="post" enctype="multipart/form-data" name="searchForm" target="result"></form>
-    <table>
-        <tr>
-            <!--need to give getFilePath() a path not sure if this paths are correct-->
-            <td><input type="submit"></td>
-        </tr>
-        <tr>
-            <td>browse file1:</td>
-            <td><input id="file1" type="file" name="text_file"></td>
-        </tr>
-        <tr>
-            <td>browse file2:</td>
-            <td><input id="file2" type="file" name="text_file"></td>
-        </tr>
-    </table>
     <script>
         function results(algo) {
             if (algo == 'LinearReg') {
