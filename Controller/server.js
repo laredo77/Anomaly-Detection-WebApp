@@ -69,8 +69,12 @@ app.listen(8080)
 // then you can write this require. It will NOT autofill, but do it anyway.
 
 // example of printing what the c++ returns
+const init_hybrid_graphs = api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv");
+const init_linear_graphs = api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv");
+const detect_hybrid_alg = api.detectHybridAlg("anomalyTrain.csv", "anomalyTest.csv");
+const detect_linear_alg = api.detectLinearAlg("anomalyTrain.csv", "anomalyTest.csv");
 
-
+const get_features = api.getFeatures("anomalyTrain.csv");
 // to print the data like below
-//onsole.log(detect_hybrid_alg)
+console.log(get_features)
 
