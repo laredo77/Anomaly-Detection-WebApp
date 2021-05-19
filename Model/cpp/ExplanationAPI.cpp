@@ -139,6 +139,26 @@
         args.GetReturnValue().Set(String::NewFromUtf8(isolate, str.c_str()));
     }
 
+
+    void GetFeatures(const FunctionCallbackInfo<Value>&args) {
+        Isolate* isolate = args.GetIsolate();
+        string csvFileName = *v8::String::Utf8Value(args[0]);
+        TimeSeries ts(csvFileName);
+        HybridAnomalyDetector ad;
+        ad.learnNormal(ts);
+        vector<correlatedFeatures> cf=ad.getNormalModel();
+        string str = "\n";
+
+        for (int i = 0; i < cf.size(); i++) {
+
+            str += cf[i].feature1;
+            str += "\n";
+            str += cf[i].feature2;
+            str += "\n";
+        }
+        args.GetReturnValue().Set(String::NewFromUtf8(isolate, str.c_str()));
+    }
+
     // Initialize write exactly as is, NODE_SET_METHOD have the 2nd arg be the name you want to use in JS and the 3rd arg is the function here
     void Initialize(Local<Object> exports) {
 
@@ -146,6 +166,7 @@
         NODE_SET_METHOD(exports, "initializeLinearGraphs", InitializeLinearGraphs);
         NODE_SET_METHOD(exports, "detectHybridAlg", DetectHybridAlg);
         NODE_SET_METHOD(exports, "detectLinearAlg", DetectLinearAlg);
+        NODE_SET_METHOD(exports, "getFeatures", GetFeatures);
     }
 
     NODE_MODULE(NODE_GYP_MODULE_NAME, Initialize); // this needs to be at the end, don't touch
