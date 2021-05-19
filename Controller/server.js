@@ -74,7 +74,14 @@ const init_linear_graphs = api.initializeLinearGraphs("anomalyTrain.csv", "anoma
 const detect_hybrid_alg = api.detectHybridAlg("anomalyTrain.csv", "anomalyTest.csv");
 const detect_linear_alg = api.detectLinearAlg("anomalyTrain.csv", "anomalyTest.csv");
 
-const get_features = api.getFeatures("anomalyTrain.csv");
+//const get_features = api.getFeatures("anomalyTrain.csv");
 // to print the data like below
-console.log(get_features)
-
+//console.log(get_features)
+const get_features = api.getFeatures("anomalyTrain.csv");
+// Parse features to array
+var features = new Array();
+var i = 0;
+get_features.split("\n").forEach(function(c) {
+    features[i] = c;
+    i++;
+});
