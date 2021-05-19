@@ -59,20 +59,11 @@ app.post("/api/model", (req, res) => {
 // then you can write this require. It will NOT autofill, but do it anyway.
 const api /*var name doesn't matter*/ = require('../build/Release/ExplanationAPI') //the name of your .node file in Release, according to your binding.gyp
 
-// example of printing what the c++ returns
 const hybrid_graphs_data = api.initializeHybridGraphs("anomalyTrain.csv");
 const linear_graphs_data = api.initializeLinearGraphs("anomalyTrain.csv");
 const detect_hybrid_alg = api.detectHybridAlg("anomalyTrain.csv", "anomalyTest.csv");
 const detect_linear_alg = api.detectLinearAlg("anomalyTrain.csv", "anomalyTest.csv");
 
-// const str1 = api.nameIwantInJS("anomalyTrain.csv", "anomalyTest.csv");
-// console.log(str1)
-//console.log(api.nameIwantInJS("anomalyTrain.csv", "anomalyTest.csv"))
+// print the data like below
+//console.log(detect_hybrid_alg)
 
-//console.log(api.initializeHybridGraphs("anomalyTrain.csv"))
-//console.log(api.initializeLinearGraphs("anomalyTrain.csv"))
-// let variableName = api.otherNameForFunctionInJS() //example of storing return val and printing later
-// console.log(variableName)
-
-// let tryAlg = api.run("anomalyTrain.csv")
-// console.log(tryAlg)
