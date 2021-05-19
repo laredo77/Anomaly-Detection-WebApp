@@ -1,0 +1,1 @@
+cmd_Release/obj.target/ExplanationAPI.node := g++ -o Release/obj.target/ExplanationAPI.node -shared -pthread -rdynamic -m64  -Wl,-soname=ExplanationAPI.node -Wl,--start-group Release/obj.target/ExplanationAPI/Model/cpp/ExplanationAPI.o -Wl,--end-group -lnode

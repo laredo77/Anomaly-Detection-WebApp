@@ -45,7 +45,7 @@ app.post("/api/model", (req, res) => {
     const model_type = req.query.id;
 })
 
-app.listen(8080)
+//app.listen(8080)
 
 
 
@@ -60,11 +60,11 @@ app.listen(8080)
 const api /*var name doesn't matter*/ = require('../build/Release/ExplanationAPI') //the name of your .node file in Release, according to your binding.gyp
 
 // example of printing what the c++ returns
-const str1 = api.nameIwantInJS("anomalyTrain.csv", "anomalyTest.csv");
-console.log(str1)
+// const str1 = api.nameIwantInJS("anomalyTrain.csv", "anomalyTest.csv");
+// console.log(str1)
 //console.log(api.nameIwantInJS("anomalyTrain.csv", "anomalyTest.csv"))
 
-//console.log(api.getAnomalyPoints("anomalyTrain.csv", "anomalyTest.csv"))
+console.log(api.initializeHybridGraphs("anomalyTrain.csv"))
 
 // let variableName = api.otherNameForFunctionInJS() //example of storing return val and printing later
 // console.log(variableName)
