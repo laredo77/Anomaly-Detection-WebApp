@@ -1,1 +1,0 @@
-cmd_Release/obj.target/filesystem.node := g++ -o Release/obj.target/filesystem.node -shared -pthread -rdynamic -m64  -Wl,-soname=filesystem.node -Wl,--start-group Release/obj.target/filesystem/filesystem.o -Wl,--end-group -lnode
