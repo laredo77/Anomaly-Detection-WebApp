@@ -3,16 +3,18 @@ const fileUpload = require('express-fileupload')
 const path = require("path");
 
 
-// cpp filesystem
+// cpp filesystem and api DONT DELETE THIS
+const api = require('../build/Release/ExplanationAPI')
+const filesystem = require('./Release/filesystem.node');
 
 const app = express()
 app.use(express.urlencoded({
     extended: false
 }))
 app.use(fileUpload())
-app.use(express.static('../view'))
+app.use(express.static('./View'))
 app.get("/", (req, res) => {
-    res.sendFile("./index.html")
+    res.sendFile(path.resolve("./index.html"))
 })
 
 app.post("/detect", (req, res) => {
@@ -35,7 +37,12 @@ app.post("/detect", (req, res) => {
         filesystem.removeFile(csv_train.name)
         lines.forEach(element => filesystem.uploadFile(element,csv_train.name))
 
+
+        // not working
+
         // test
+        const str1 = api.nameIwantInJS("anomalyTrain.csv", "anomalyTest.csv")
+        console.log(str1)
     }
     // res.end()
 })
@@ -45,7 +52,7 @@ app.post("/api/model", (req, res) => {
     const model_type = req.query.id;
 })
 
-//app.listen(8080)
+app.listen(8080)
 
 
 
@@ -57,14 +64,14 @@ app.post("/api/model", (req, res) => {
 // and if you changed anything in the configurations like how many functions you want to use etc, run "node-gyp configure" again
 
 // then you can write this require. It will NOT autofill, but do it anyway.
-const api /*var name doesn't matter*/ = require('../build/Release/ExplanationAPI') //the name of your .node file in Release, according to your binding.gyp
+// const api /*var name doesn't matter*/ = require('../build/Release/ExplanationAPI') //the name of your .node file in Release, according to your binding.gyp
 
 // example of printing what the c++ returns
 // const str1 = api.nameIwantInJS("anomalyTrain.csv", "anomalyTest.csv");
 // console.log(str1)
-//console.log(api.nameIwantInJS("anomalyTrain.csv", "anomalyTest.csv"))
+// console.log(api.nameIwantInJS("anomalyTrain.csv", "anomalyTest.csv"))
 
-console.log(api.initializeHybridGraphs("anomalyTrain.csv"))
+// console.log(api.initializeHybridGraphs("anomalyTrain.csv"))
 
 // let variableName = api.otherNameForFunctionInJS() //example of storing return val and printing later
 // console.log(variableName)
