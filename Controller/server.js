@@ -3,8 +3,7 @@ const fileUpload = require('express-fileupload')
 const path = require("path");
 
 
-// cpp filesystem  
-const filesystem = require('./Release/filesystem');
+// cpp filesystem
 
 const app = express()
 app.use(express.urlencoded({
@@ -58,11 +57,11 @@ app.listen(8080)
 // and if you changed anything in the configurations like how many functions you want to use etc, run "node-gyp configure" again
 
 // then you can write this require. It will NOT autofill, but do it anyway.
-//const api /*var name doesn't matter*/ = require('../build/Release/ExplanationAPI') //the name of your .node file in Release, according to your binding.gyp
+const api /*var name doesn't matter*/ = require('../build/Release/ExplanationAPI') //the name of your .node file in Release, according to your binding.gyp
 
 // example of printing what the c++ returns
-//const str1 = api.nameIwantInJS("anomalyTrain.csv", "anomalyTest.csv");
-//console.log(str1)
+const str1 = api.nameIwantInJS("anomalyTrain.csv", "anomalyTest.csv");
+console.log(str1)
 //console.log(api.nameIwantInJS("anomalyTrain.csv", "anomalyTest.csv"))
 
 //console.log(api.getAnomalyPoints("anomalyTrain.csv", "anomalyTest.csv"))
