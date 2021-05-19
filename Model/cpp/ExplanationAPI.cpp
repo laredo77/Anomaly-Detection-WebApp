@@ -141,6 +141,7 @@
 
     // Initialize write exactly as is, NODE_SET_METHOD have the 2nd arg be the name you want to use in JS and the 3rd arg is the function here
     void Initialize(Local<Object> exports) {
+
         NODE_SET_METHOD(exports, "initializeHybridGraphs", InitializeHybridGraphs);
         NODE_SET_METHOD(exports, "initializeLinearGraphs", InitializeLinearGraphs);
         NODE_SET_METHOD(exports, "detectHybridAlg", DetectHybridAlg);
