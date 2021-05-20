@@ -52,7 +52,7 @@ app.post("/detect", (req, res) => {
 
 
 app.post("/api/model", (req, res) => {
-    const model_type = req.query.id;
+    res.send(get_features)
 })
 
 app.listen(8080)
