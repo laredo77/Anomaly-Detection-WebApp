@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns="http://www.w3.org/1999/html">
+<html lang="en">
 <head>
     <!-- Load plotly.js into the DOM -->
     <script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
@@ -12,39 +12,6 @@
 <div class="bg">
     <div class="relative" id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
     <!--not sure we need the next line -->
-    <script>
-        function results(algo) {
-            if (algo == 'LinearReg') {
-                var trace1 = {
-                    x: [1, 2, 3, 4],
-                    y: [10, 15, 13, 17],
-                    mode: 'markers'
-                };
-
-                var data = [ trace1 ];
-
-                var layout = {
-                    title:'Linear Reg'
-                };
-
-                Plotly.newPlot('myDiv', data, layout);
-            } else {
-                var trace1 = {
-                    x: [1, 2, 3, 4],
-                    y: [10, 15, 13, 17],
-                    mode: 'markers'
-                };
-
-                var data = [ trace1 ];
-
-                var layout = {
-                    title:'Hybrid Algorithm'
-                };
-
-                Plotly.newPlot('myDiv', data, layout);
-            }
-        }
-    </script>
 <form action="/detect" method="POST" enctype="multipart/form-data" name="searchForm">
 <table>
     <tr>
@@ -63,8 +30,11 @@
         </datalist>
     </tr>
 </table>
+    <script src = 'viewJS.js'>
+    </script>
 <br>
 <td><input type="submit"></td>
+<!--    <label id="label1">hello</label>-->
 </form>
 
     <div class="Algo-menu">

@@ -36,14 +36,14 @@ app.post("/detect", (req, res) => {
         if (algo_type === "RegLinear") {
             const detect_linear_alg = api.detectLinearAlg("anomalyTrain.csv", "anomalyTest.csv");
             const init_linear_graphs = api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv");
-            console.log(detect_linear_alg)
-            console.log(init_linear_graphs)
+//            console.log(detect_linear_alg)
+  //          console.log(init_linear_graphs)
         } else
         {
             const detect_hybrid_alg = api.detectHybridAlg("anomalyTrain.csv", "anomalyTest.csv");
             const init_hybrid_graphs = api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv");
-            console.log(detect_hybrid_alg)
-            console.log(init_hybrid_graphs)
+    //        console.log(detect_hybrid_alg)
+      //      console.log(init_hybrid_graphs)
         }
         // test
     }
@@ -55,7 +55,7 @@ app.post("/api/model", (req, res) => {
     const model_type = req.query.id;
 })
 
-app.listen(8080)
+app.listen(9092)
 
 
 
@@ -74,9 +74,6 @@ const init_linear_graphs = api.initializeLinearGraphs("anomalyTrain.csv", "anoma
 const detect_hybrid_alg = api.detectHybridAlg("anomalyTrain.csv", "anomalyTest.csv");
 const detect_linear_alg = api.detectLinearAlg("anomalyTrain.csv", "anomalyTest.csv");
 
-//const get_features = api.getFeatures("anomalyTrain.csv");
-// to print the data like below
-//console.log(get_features)
 const get_features = api.getFeatures("anomalyTrain.csv");
 // Parse features to array
 var features = new Array();
@@ -85,3 +82,16 @@ get_features.split("\n").forEach(function(c) {
     features[i] = c;
     i++;
 });
+// parameters = [
+//     {
+//         "get_features": get_features,
+//         "features" : features,
+//         "init_hybrid_graphs" : init_hybrid_graphs,
+//         "init_linear_graphs" : init_linear_graphs,
+//         "detect_hybrid_alg" : detect_hybrid_alg,
+//         "detect_linear_alg" : detect_linear_alg
+//     }
+// ]
+// to print the data like below
+//console.log(get_features)
+//export { features, get_features, init_hybrid_graphs, init_linear_graphs, detect_hybrid_alg, detect_linear_alg };
