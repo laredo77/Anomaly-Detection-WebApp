@@ -55,7 +55,7 @@ app.post("/api/model", (req, res) => {
     const model_type = req.query.id;
 })
 
-app.listen(9092)
+app.listen(8080)
 
 
 
