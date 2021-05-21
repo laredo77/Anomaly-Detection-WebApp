@@ -28,7 +28,7 @@ class SimpleAnomalyDetector:public TimeSeriesAnomalyDetector {
 protected:
     vector<correlatedFeatures> cf;
     vector<AnomalyReport> v_ar;
-    vector<std::string> anomaly_points;
+    vector<Point> anomaly_points;
 public:
     SimpleAnomalyDetector();
     virtual ~SimpleAnomalyDetector();
@@ -47,7 +47,7 @@ public:
         return v_ar;
     }
 
-    vector<std::string> getAnomalyPoints() {
+    vector<Point> getAnomalyPoints() {
         return anomaly_points;
     }
 };

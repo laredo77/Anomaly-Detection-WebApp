@@ -23,8 +23,11 @@
     using v8::Value;
     using v8::Array;
     using v8::Exception;
+    using v8::HandleScope;
     using namespace std; //for the strings
 
+
+    // maoz fix
     void InitializeHybridGraphs(const FunctionCallbackInfo<Value>&args) {
         Isolate* isolate = args.GetIsolate(); // just do if you need isolate somewhere like NewFromUTF8, see below
         string csvFileName = *v8::String::Utf8Value(args[0]); // get first argument sent from JS and converts it to string we can use
@@ -32,32 +35,47 @@
         HybridAnomalyDetector ad;
         ad.learnNormal(ts);
         vector<correlatedFeatures> cf=ad.getNormalModel();
-        string str = "\n";
+
+
+        // create array
+        Local<Array> points = Array::New(isolate);
 
         for (int i = 0; i < cf.size(); i++) {
-            str += cf[i].feature1;
-            str += "-";
-            str += cf[i].feature2;
             if (cf[i].corrlation > 0.9) {
-                str += "\nlinear reg\n";
-                str += to_string(cf[i].lin_reg.a);
-                str += ",";
-                str += to_string(cf[i].lin_reg.b);
-                str += "\n";
+                Local<Object> correlated_point = Object::New(isolate);
+                double x = cf[i].x;
+                double y = cf[i].lin_reg.a * x + cf[i].lin_reg.b;
+                correlated_point->Set(String::NewFromUtf8(isolate, "type"), String::NewFromUtf8(isolate, "line"));
+                // create point
+                Local<Object> point = Object::New(isolate);
+                // set point
+                point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "-" + cf[i].feature2).c_str()));
+                point->Set(String::NewFromUtf8(isolate, "x"), Number::New(isolate, cf[i].x));
+                point->Set(String::NewFromUtf8(isolate, "y"), Number::New(isolate, cf[i].y));
+                correlated_point->Set(String::NewFromUtf8(isolate, "point"), point);
+                points->Set(i, correlated_point);
             }
             else if (cf[i].corrlation > 0.5) {
-                str += "\nmin circle\n";
-                str += to_string(cf[i].x);
-                str += ",";
-                str += to_string(cf[i].y);
-                str += ",";
-                str += to_string(cf[i].radius);
-                str += "\n";
+                Local<Object> correlated_point = Object::New(isolate);
+                correlated_point->Set(String::NewFromUtf8(isolate, "type"), String::NewFromUtf8(isolate, "circle"));
+                // create point
+                Local<Object> point = Object::New(isolate);
+                // set point
+                point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "-" + cf[i].feature2).c_str()));
+                point->Set(String::NewFromUtf8(isolate, "x"), Number::New(isolate, cf[i].x));
+                point->Set(String::NewFromUtf8(isolate, "y"), Number::New(isolate, cf[i].y));
+                point->Set(String::NewFromUtf8(isolate, "radius"), Number::New(isolate, cf[i].radius));
+                // create point with data
+                correlated_point->Set(String::NewFromUtf8(isolate, "point"), point);
+                points->Set(i, correlated_point);
             }
         }
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, str.c_str()));
+        args.GetReturnValue().Set(points);
     }
 
+
+
+    // maoz fix
     void InitializeLinearGraphs(const FunctionCallbackInfo<Value>&args) {
         Isolate* isolate = args.GetIsolate(); // just do if you need isolate somewhere like NewFromUTF8, see below
         string csvFileName = *v8::String::Utf8Value(args[0]); // get first argument sent from JS and converts it to string we can use
@@ -65,81 +83,96 @@
         HybridAnomalyDetector ad;
         ad.learnNormal(ts);
         vector<correlatedFeatures> cf=ad.getNormalModel();
-        string str = "\n";
+
+        // create array
+        Local<Array> points = Array::New(isolate);
 
         for (int i = 0; i < cf.size(); i++) {
             if (cf[i].corrlation > 0.9) {
-                str += cf[i].feature1;
-                str += "-";
-                str += cf[i].feature2;
-                str += "\nlinear reg\n";
-                str += to_string(cf[i].lin_reg.a);
-                str += ",";
-                str += to_string(cf[i].lin_reg.b);
-                str += "\n";
+                Local<Object> correlated_point = Object::New(isolate);
+                double x = cf[i].x;
+                double y = cf[i].lin_reg.a * x + cf[i].lin_reg.b;
+                correlated_point->Set(String::NewFromUtf8(isolate, "type"), String::NewFromUtf8(isolate, "line"));
+                Local<Object> point = Object::New(isolate);
+                // set point
+                point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "-" + cf[i].feature2).c_str()));
+                point->Set(String::NewFromUtf8(isolate, "x"), Number::New(isolate, cf[i].x));
+                point->Set(String::NewFromUtf8(isolate, "y"), Number::New(isolate, cf[i].y));
+                correlated_point->Set(String::NewFromUtf8(isolate, "point"), point);
+                points->Set(i, correlated_point);
             }
         }
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, str.c_str()));
+        args.GetReturnValue().Set(points);
     }
 
+    // maoz fix
     void DetectHybridAlg(const FunctionCallbackInfo<Value>&args) {
+       // input
         Isolate* isolate = args.GetIsolate();
         string csvFileName = *v8::String::Utf8Value(args[0]);
         string csvFileName2 = *v8::String::Utf8Value(args[1]);
+
+        // initialize graph
         TimeSeries ts(csvFileName);
         HybridAnomalyDetector ad;
         ad.learnNormal(ts);
-        vector<correlatedFeatures> cf=ad.getNormalModel();
         TimeSeries ts2(csvFileName2);
         vector<AnomalyReport> r = ad.detect(ts2);
-        string str = "\n";
+        vector<Point> anomaly_points = ad.getAnomalyPoints();
 
-        for (int i = 0; i < r.size(); i++) {
-            str += r[i].description;
-            str += "\t";
-            str += to_string(r[i].timeStep);
-            str += "\n";
+        // create javascript array of AnomalyReport
+        Local<Array> reports = Array::New(isolate);
+
+        // create objects
+        for (int i = 0; i < r.size() && i < anomaly_points.size(); i++) {
+         Local<Object> report = Object::New(isolate);
+         report->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate, r[i].description.c_str()));
+         report->Set(String::NewFromUtf8(isolate, "timeStep"), Number::New(isolate, r[i].timeStep));
+         Local<Object> point = Object::New(isolate);
+         point->Set(String::NewFromUtf8(isolate, "x"), Number::New(isolate, anomaly_points[i].x));
+         point->Set(String::NewFromUtf8(isolate, "y"), Number::New(isolate, anomaly_points[i].y));
+         report->Set(String::NewFromUtf8(isolate, "Point"), point);
+         reports->Set(i, report);
         }
 
-        str += "anomaly points:\n";
-        vector<std::string> anomaly_points = ad.getAnomalyPoints();
-        for (int i = 0; i < anomaly_points.size(); i++) {
-            str += anomaly_points[i];
-            str += "\n";
-        }
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, str.c_str()));
+        args.GetReturnValue().Set(reports);
     }
 
-
+    // maoz fix
     void DetectLinearAlg(const FunctionCallbackInfo<Value>&args) {
+        // input
         Isolate* isolate = args.GetIsolate();
         string csvFileName = *v8::String::Utf8Value(args[0]);
         string csvFileName2 = *v8::String::Utf8Value(args[1]);
+
+        // initialize graph
         TimeSeries ts(csvFileName);
         HybridAnomalyDetector ad;
         ad.learnNormalLinear(ts);
         TimeSeries ts2(csvFileName2);
         vector<AnomalyReport> r = ad.detectLinear(ts2);
-        string str = "\n";
+        vector<Point> anomaly_points = ad.getAnomalyPoints();
 
-        for (int i = 0; i < r.size(); i++) {
+        // create javascript array of AnomalyReport
+        Local<Array> reports = Array::New(isolate);
 
-            str += r[i].description;
-            str += "\t";
-            str += to_string(r[i].timeStep);
-            str += "\n";
+        // create objects
+        for (int i = 0; i < r.size() && i < anomaly_points.size(); i++) {
+         Local<Object> report = Object::New(isolate);
+         report->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate, r[i].description.c_str()));
+         report->Set(String::NewFromUtf8(isolate, "timeStep"), Number::New(isolate, r[i].timeStep));
+         Local<Object> point = Object::New(isolate);
+         point->Set(String::NewFromUtf8(isolate, "x"), Number::New(isolate, anomaly_points[i].x));
+         point->Set(String::NewFromUtf8(isolate, "y"), Number::New(isolate, anomaly_points[i].y));
+         report->Set(String::NewFromUtf8(isolate, "Point"), point);
+         reports->Set(i, report);
         }
 
-        str += "anomaly points:\n";
-        vector<std::string> anomaly_points = ad.getAnomalyPoints();
-        for (int i = 0; i < anomaly_points.size(); i++) {
-            str += anomaly_points[i];
-            str += "\n";
-        }
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, str.c_str()));
+        args.GetReturnValue().Set(reports);
     }
 
 
+    // maoz fix
     void GetFeatures(const FunctionCallbackInfo<Value>&args) {
         Isolate* isolate = args.GetIsolate();
         string csvFileName = *v8::String::Utf8Value(args[0]);
@@ -147,16 +180,14 @@
         HybridAnomalyDetector ad;
         ad.learnNormal(ts);
         vector<correlatedFeatures> cf=ad.getNormalModel();
-        string str = "\n";
+
+
+        Local<Array> features = Array::New(isolate);
 
         for (int i = 0; i < cf.size(); i++) {
-
-            str += cf[i].feature1;
-            str += "\n";
-            str += cf[i].feature2;
-            str += "\n";
+            features->Set(i, String::NewFromUtf8(isolate, (cf[i].feature1+"-"+cf[i].feature2).c_str()));
         }
-        args.GetReturnValue().Set(String::NewFromUtf8(isolate, str.c_str()));
+        args.GetReturnValue().Set(features);
     }
 
     // Initialize write exactly as is, NODE_SET_METHOD have the 2nd arg be the name you want to use in JS and the 3rd arg is the function here
@@ -173,3 +204,5 @@
 
 
  }
+
+

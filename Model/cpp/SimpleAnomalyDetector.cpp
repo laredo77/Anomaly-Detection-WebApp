@@ -110,12 +110,9 @@ vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
                 string desc = cf[i].feature1 + "-" + cf[i].feature2;
                 AnomalyReport aReport = AnomalyReport(desc, (k + 1));
                 this->v_ar.push_back(aReport);
-                string str = desc;
-                str += " ";
-                str += to_string(ps[k]->x);
-                str += ",";
-                str += to_string(ps[k]->y);
-                this->anomaly_points.push_back(str);
+
+                 Point bad_point(ps[k]->x,ps[k]->y);
+                 this->anomaly_points.push_back(bad_point);
             }
         }
         // delete points
@@ -196,12 +193,10 @@ vector<AnomalyReport> SimpleAnomalyDetector::detectLinear(const TimeSeries &ts) 
                 string desc = cf[i].feature1 + "-" + cf[i].feature2;
                 AnomalyReport aReport = AnomalyReport(desc, (k + 1));
                 this->v_ar.push_back(aReport);
-                string str = desc;
-                str += " ";
-                str += to_string(ps[k]->x);
-                str += ",";
-                str += to_string(ps[k]->y);
-                this->anomaly_points.push_back(str);
+
+
+                Point bad_point(ps[k]->x,ps[k]->y);
+                this->anomaly_points.push_back(bad_point);
             }
         }
         // delete points

@@ -54,13 +54,26 @@ app.post("/detect", (req, res) => {
 app.post("/api/model", (req, res) => {
     res.send(get_features)
 })
+const detect_linear_alg = api.detectLinearAlg("anomalyTrain.csv", "anomalyTest.csv");
+const init_linear_graphs = api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv");
+const detect_hybrid_alg = api.detectHybridAlg("anomalyTrain.csv", "anomalyTest.csv");
+const init_hybrid_graphs = api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv");
+
+console.log("LINEAR_PART")
+console.log(detect_linear_alg)
+console.log("LINEAR_LINE")
+console.log(init_linear_graphs)
+console.log("HYBRID_PART")
+console.log(detect_hybrid_alg)
+console.log("HYBRID_CIRCLE")
+console.log(init_hybrid_graphs)
 
 app.listen(8080)
 
 
 
 
-// ITAMAR PART CUZ THERES NO .NODE FILE  
+
 
 // first run "node-gyp configure" and "node-gyp build" for the build and release folders to appear along with your api
 // after this is done, run "node main" to run this file. Every time you change the c++ run "node-gyp build" again,
@@ -69,19 +82,8 @@ app.listen(8080)
 // then you can write this require. It will NOT autofill, but do it anyway.
 
 // example of printing what the c++ returns
-const init_hybrid_graphs = api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv");
-const init_linear_graphs = api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv");
-const detect_hybrid_alg = api.detectHybridAlg("anomalyTrain.csv", "anomalyTest.csv");
-const detect_linear_alg = api.detectLinearAlg("anomalyTrain.csv", "anomalyTest.csv");
 
-const get_features = api.getFeatures("anomalyTrain.csv");
-// Parse features to array
-var features = new Array();
-var i = 0;
-get_features.split("\n").forEach(function(c) {
-    features[i] = c;
-    i++;
-});
+
 // parameters = [
 //     {
 //         "get_features": get_features,
