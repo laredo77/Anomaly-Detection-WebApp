@@ -36,43 +36,44 @@ app.post("/detect", (req, res) => {
         if (algo_type === "RegLinear") {
             const detect_linear_alg = api.detectLinearAlg("anomalyTrain.csv", "anomalyTest.csv");
             const init_linear_graphs = api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv");
-//            console.log(detect_linear_alg)
-  //          console.log(init_linear_graphs)
-        } else
-        {
+            // console.log(detect_linear_alg)
+            // console.log(init_linear_graphs)
+        } else {
             const detect_hybrid_alg = api.detectHybridAlg("anomalyTrain.csv", "anomalyTest.csv");
             const init_hybrid_graphs = api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv");
-    //        console.log(detect_hybrid_alg)
-      //      console.log(init_hybrid_graphs)
+            // console.log(detect_hybrid_alg)
+            // console.log(init_hybrid_graphs)
         }
         // test
     }
     // res.end()
 })
-
-
-app.post("/api/model", (req, res) => {
-    res.send(get_features)
-})
 const detect_linear_alg = api.detectLinearAlg("anomalyTrain.csv", "anomalyTest.csv");
 const init_linear_graphs = api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv");
 const detect_hybrid_alg = api.detectHybridAlg("anomalyTrain.csv", "anomalyTest.csv");
 const init_hybrid_graphs = api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv");
+app.post("/detect/linear", (req, res) => {
+    res.send(detect_linear_alg)
+})
+app.post("/detect/hybrid", (req, res) => {
+    res.send(detect_hybrid_alg)
+})
+app.post("/init/linear", (req, res) => {
+    res.send(init_linear_graphs)
+})
+app.post("/init/hybrid", (req, res) => {
+    res.send(init_hybrid_graphs)
+})
+// console.log("LINEAR_PART")
+// console.log(detect_linear_alg)
+// console.log("LINEAR_LINE")
+// console.log(init_linear_graphs)
+// console.log("HYBRID_PART")
+// console.log(detect_hybrid_alg)
+// console.log("HYBRID_CIRCLE")
+// console.log(init_hybrid_graphs)
 
-console.log("LINEAR_PART")
-console.log(detect_linear_alg)
-console.log("LINEAR_LINE")
-console.log(init_linear_graphs)
-console.log("HYBRID_PART")
-console.log(detect_hybrid_alg)
-console.log("HYBRID_CIRCLE")
-console.log(init_hybrid_graphs)
-
-app.listen(8080)
-
-
-
-
+app.listen(8097)
 
 
 // first run "node-gyp configure" and "node-gyp build" for the build and release folders to appear along with your api
@@ -82,18 +83,3 @@ app.listen(8080)
 // then you can write this require. It will NOT autofill, but do it anyway.
 
 // example of printing what the c++ returns
-
-
-// parameters = [
-//     {
-//         "get_features": get_features,
-//         "features" : features,
-//         "init_hybrid_graphs" : init_hybrid_graphs,
-//         "init_linear_graphs" : init_linear_graphs,
-//         "detect_hybrid_alg" : detect_hybrid_alg,
-//         "detect_linear_alg" : detect_linear_alg
-//     }
-// ]
-// to print the data like below
-//console.log(get_features)
-//export { features, get_features, init_hybrid_graphs, init_linear_graphs, detect_hybrid_alg, detect_linear_alg };
