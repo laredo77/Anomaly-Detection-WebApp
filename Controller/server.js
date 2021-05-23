@@ -52,7 +52,7 @@ const detect_linear_alg = api.detectLinearAlg("anomalyTrain.csv", "anomalyTest.c
 const init_linear_graphs = api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv");
 const detect_hybrid_alg = api.detectHybridAlg("anomalyTrain.csv", "anomalyTest.csv");
 const init_hybrid_graphs = api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv");
-const expressionString = "5*x+3";
+const expressionString = "50*x+3";
 app.post("/detect/linear", (req, res) => {
     res.send(detect_linear_alg)
 })
@@ -74,7 +74,7 @@ app.post("/init/hybrid", (req, res) => {
 // console.log("HYBRID_CIRCLE")
 // console.log(init_hybrid_graphs)
 
-app.listen(8097)
+app.listen(8080)
 
 
 // first run "node-gyp configure" and "node-gyp build" for the build and release folders to appear along with your api
