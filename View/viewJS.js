@@ -1,5 +1,21 @@
 // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 // points of anomalies in linear reg
+var isLinear = 0;
+function setIsLinear(value){
+    if(value == 0) {
+        isLinear =0;
+    }
+    else
+        isLinear =1;
+}
+function result(feature) {
+    if(isLinear == 0) {
+        resultHybrid(feature);
+    }
+    else {
+        resultLinear(feature);
+    }
+}
 function resultLinear(feature) {
     var trace1;
     var traceInit;
@@ -35,7 +51,7 @@ function resultLinear(feature) {
             try {
                 const expr = math.compile(this.response)
                 //instead of the numbers need to put minimum value and maximum
-                const xValues = math.range(-10, 10, 0.5).toArray()
+                const xValues = math.range(0, 10, 0.5).toArray()
                 const yValues = xValues.map(function (x) {
                     return expr.evaluate({x: x})
                 })
@@ -92,7 +108,7 @@ function resultHybrid(feature) {
             try {
                 const expr = math.compile(this.response)
                 //instead of the numbers need to put minimum value and maximum
-                const xValues = math.range(-10, 10, 0.5).toArray()
+                const xValues = math.range(0, 100, 0.5).toArray()
                 const yValues = xValues.map(function (x) {
                     return expr.evaluate({x: x})
                 })

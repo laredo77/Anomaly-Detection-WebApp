@@ -1,3 +1,30 @@
+.Feature-menu {
+    width: 150px;
+    height: 100px;
+    overflow-y: auto;
+}
+
+.Feature-menu a {
+    background-color: #eee;
+    color: black;
+    display: block;
+    padding: 10px;
+    text-decoration: none;
+}
+
+.Feature-menu a:hover {
+    background-color: #e0a1e0;
+}
+
+.Feature-menu a.active {
+    background-color: #4e004e;
+    color: white;
+}
+div.Feature-menu{
+    position: fixed;
+    top: 200px;
+    left: 400px;
+}
 .Algo-menu {
     width: 150px;
     height: 100px;
