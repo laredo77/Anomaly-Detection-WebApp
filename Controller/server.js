@@ -38,15 +38,17 @@ app.post("/detect", (req, res) => {
             const init_linear_graphs = api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv");
             // console.log(detect_linear_alg)
             // console.log(init_linear_graphs)
+            res.write(detect_linear_alg)
         } else {
             const detect_hybrid_alg = api.detectHybridAlg("anomalyTrain.csv", "anomalyTest.csv");
             const init_hybrid_graphs = api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv");
             // console.log(detect_hybrid_alg)
             // console.log(init_hybrid_graphs)
+            res.write(JSON.stringify(detect_hybrid_alg))
         }
         // test
     }
-    // res.end()
+    res.end()
 })
 const detect_linear_alg = api.detectLinearAlg("anomalyTrain.csv", "anomalyTest.csv");
 const init_linear_graphs = api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv");
@@ -72,7 +74,7 @@ app.post("/init/hybrid", (req, res) => {
 // api.getFeatures
 
 // return map of csv from cpp
- console.log(api.getMap("anomalyTrain.csv"))
+ // console.log(api.getMap("anomalyTrain.csv"))
 // console.log("HYBRID_PART")
 // console.log(detect_hybrid_alg)
 // console.log("HYBRID_CIRCLE")

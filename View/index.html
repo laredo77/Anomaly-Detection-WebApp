@@ -17,7 +17,7 @@
 <div class="bg">
     <div class="relative" id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
     <!--not sure we need the next line -->
-<form action="/detect" method="POST" enctype="multipart/form-data" name="searchForm">
+<form action="/detect" method="POST" enctype="multipart/form-data" name="searchForm" target="result">
 <table>
     <tr>
         <td>browse train file:</td>
@@ -38,6 +38,8 @@
 <br>
 <td><input type="submit"></td>
 </form>
+<br>
+<iframe name="result" width="50%" height="500"></iframe>
     <script src = 'viewJS.js'></script>
     <div class="Algo-menu">
         <a href="#" class="active">Algo-Menu</a>
