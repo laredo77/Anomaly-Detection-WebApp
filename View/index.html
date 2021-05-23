@@ -7,9 +7,17 @@
     <link rel="stylesheet" href="fileCSS.css">
     <title>Anomaly Detection Server</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="https://unpkg.com/mathjs@9.4.0/lib/browser/math.js"></script>
+
+    <script src="https://cdn.plot.ly/plotly-1.35.2.min.js"></script>
 </head>
 <body>
-
+<!--<form id="form">-->
+<!--    <label for="eq">Enter an equation:</label>-->
+<!--    <input type="text" id="eq" value="4 * x + 5" />-->
+<!--    <input type="submit" value="Draw" />-->
+<!--</form>-->
+<div id="plot"></div>
 <!--<p id="demo"></p>-->
 
 <div class="bg">
@@ -40,8 +48,8 @@
     <script src = 'viewJS.js'></script>
     <div class="Algo-menu">
         <a href="#" class="active">Algo-Menu</a>
-        <a onclick="resultLinear('C-D'); initLinearReg()">Linear reg</a>
-        <a onclick="resultHybrid('A-B'); initHybrid()">Hybrid algorithm</a>
+        <a onclick="resultLinear('C-D');">Linear reg</a>
+        <a onclick="resultHybrid('A-B');">Hybrid algorithm</a>
     </div>
 </div>
 </body>

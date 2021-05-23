@@ -52,6 +52,7 @@ const detect_linear_alg = api.detectLinearAlg("anomalyTrain.csv", "anomalyTest.c
 const init_linear_graphs = api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv");
 const detect_hybrid_alg = api.detectHybridAlg("anomalyTrain.csv", "anomalyTest.csv");
 const init_hybrid_graphs = api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv");
+const expressionString = "5*x+3";
 app.post("/detect/linear", (req, res) => {
     res.send(detect_linear_alg)
 })
@@ -59,10 +60,10 @@ app.post("/detect/hybrid", (req, res) => {
     res.send(detect_hybrid_alg)
 })
 app.post("/init/linear", (req, res) => {
-    res.send(init_linear_graphs)
+    res.send(expressionString)
 })
 app.post("/init/hybrid", (req, res) => {
-    res.send(init_hybrid_graphs)
+    res.send(expressionString)
 })
 // console.log("LINEAR_PART")
 // console.log(detect_linear_alg)
