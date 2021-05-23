@@ -42,8 +42,7 @@ function resultLinear(feature) {
                 traceInit = {
                     x: xValues,
                     y: yValues,
-                    type: 'scatter',
-                    color: 'black'
+                    type: 'scatter'
                 }
                 var data = [trace1, traceInit];
                 Plotly.newPlot('myDiv', data, layout)
@@ -100,8 +99,7 @@ function resultHybrid(feature) {
                 traceInit = {
                     x: xValues,
                     y: yValues,
-                    type: 'scatter',
-                    color: 'black'
+                    type: 'scatter'
                 }
                 var data = [trace1, traceInit];
                 Plotly.newPlot('myDiv', data, layout)
