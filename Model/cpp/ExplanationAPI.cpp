@@ -24,6 +24,7 @@
     using v8::Array;
     using v8::Exception;
     using v8::HandleScope;
+    using v8::Map;
     using namespace std; //for the strings
 
 
@@ -43,15 +44,16 @@
         for (int i = 0; i < cf.size(); i++) {
             if (cf[i].corrlation > 0.9) {
                 Local<Object> correlated_point = Object::New(isolate);
-                double x = cf[i].x;
-                double y = cf[i].lin_reg.a * x + cf[i].lin_reg.b;
+                // create a and b
+                string a(to_string(cf[i].lin_reg.a));
+                string b(to_string(cf[i].lin_reg.b));
+                // type
                 correlated_point->Set(String::NewFromUtf8(isolate, "type"), String::NewFromUtf8(isolate, "line"));
                 // create point
                 Local<Object> point = Object::New(isolate);
                 // set point
                 point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "-" + cf[i].feature2).c_str()));
-                point->Set(String::NewFromUtf8(isolate, "x"), Number::New(isolate, cf[i].x));
-                point->Set(String::NewFromUtf8(isolate, "y"), Number::New(isolate, cf[i].y));
+                point->Set(String::NewFromUtf8(isolate, "expression"), String::NewFromUtf8(isolate, (a+"*x"+b).c_str()));
                 correlated_point->Set(String::NewFromUtf8(isolate, "point"), point);
                 points->Set(i, correlated_point);
             }
@@ -62,9 +64,10 @@
                 Local<Object> point = Object::New(isolate);
                 // set point
                 point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "-" + cf[i].feature2).c_str()));
-                point->Set(String::NewFromUtf8(isolate, "x"), Number::New(isolate, cf[i].x));
-                point->Set(String::NewFromUtf8(isolate, "y"), Number::New(isolate, cf[i].y));
-                point->Set(String::NewFromUtf8(isolate, "radius"), Number::New(isolate, cf[i].radius));
+                point->Set(String::NewFromUtf8(isolate, "x+"), Number::New(isolate, cf[i].x + cf[i].radius));
+                point->Set(String::NewFromUtf8(isolate, "y+"), Number::New(isolate, cf[i].y + cf[i].radius));
+                point->Set(String::NewFromUtf8(isolate, "x-"), Number::New(isolate, cf[i].x - cf[i].radius));
+                point->Set(String::NewFromUtf8(isolate, "y-"), Number::New(isolate, cf[i].y - cf[i].radius));
                 // create point with data
                 correlated_point->Set(String::NewFromUtf8(isolate, "point"), point);
                 points->Set(i, correlated_point);
@@ -90,14 +93,16 @@
         for (int i = 0; i < cf.size(); i++) {
             if (cf[i].corrlation > 0.9) {
                 Local<Object> correlated_point = Object::New(isolate);
-                double x = cf[i].x;
-                double y = cf[i].lin_reg.a * x + cf[i].lin_reg.b;
+                // create a and b
+                string a(to_string(cf[i].lin_reg.a));
+                string b(to_string(cf[i].lin_reg.b));
+                // type
                 correlated_point->Set(String::NewFromUtf8(isolate, "type"), String::NewFromUtf8(isolate, "line"));
+                // create point
                 Local<Object> point = Object::New(isolate);
                 // set point
                 point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "-" + cf[i].feature2).c_str()));
-                point->Set(String::NewFromUtf8(isolate, "x"), Number::New(isolate, cf[i].x));
-                point->Set(String::NewFromUtf8(isolate, "y"), Number::New(isolate, cf[i].y));
+                point->Set(String::NewFromUtf8(isolate, "expression"), String::NewFromUtf8(isolate, (a+"*x"+b).c_str()));
                 correlated_point->Set(String::NewFromUtf8(isolate, "point"), point);
                 points->Set(i, correlated_point);
             }
@@ -189,6 +194,7 @@
         }
         args.GetReturnValue().Set(features);
     }
+
 
     // Initialize write exactly as is, NODE_SET_METHOD have the 2nd arg be the name you want to use in JS and the 3rd arg is the function here
     void Initialize(Local<Object> exports) {
