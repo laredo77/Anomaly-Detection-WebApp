@@ -68,11 +68,14 @@ app.post("/init/hybrid", (req, res) => {
 // console.log("LINEAR_PART")
 // console.log(detect_linear_alg)
 // console.log("LINEAR_LINE")
- console.log(init_linear_graphs)
+
+// api.getFeatures
+
+// return map of csv from cpp
+ console.log(api.getMap("anomalyTrain.csv"))
 // console.log("HYBRID_PART")
 // console.log(detect_hybrid_alg)
 // console.log("HYBRID_CIRCLE")
- console.log(init_hybrid_graphs)
 
 app.listen(8080)
 

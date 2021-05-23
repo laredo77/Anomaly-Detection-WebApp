@@ -195,6 +195,29 @@
         args.GetReturnValue().Set(features);
     }
 
+        void GetMap(const FunctionCallbackInfo<Value>&args) {
+            Isolate* isolate = args.GetIsolate();
+            string csvFileName = *v8::String::Utf8Value(args[0]);
+            TimeSeries ts(csvFileName);
+
+            map<std::string, vector<float>> map = ts.get_data_structure();
+
+            Local<Map> map_js = Map::New(isolate);
+
+            // create MAP OF JAVASCRIPT FROM CPP MAP BY V8
+            for (const auto& value : map) {
+                // create array
+                Local<Array> array_js = Array::New(isolate);
+                // from vector
+                for (int i = 0; i < value.second.size(); i++) {
+                    array_js->Set(i, Number::New(isolate, value.second[i]));
+                }
+                // add value to javascript map
+                map_js->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate,value.first.c_str()), array_js);
+            }
+            // return map
+            args.GetReturnValue().Set(map_js);
+        }
 
     // Initialize write exactly as is, NODE_SET_METHOD have the 2nd arg be the name you want to use in JS and the 3rd arg is the function here
     void Initialize(Local<Object> exports) {
@@ -204,6 +227,7 @@
         NODE_SET_METHOD(exports, "detectHybridAlg", DetectHybridAlg);
         NODE_SET_METHOD(exports, "detectLinearAlg", DetectLinearAlg);
         NODE_SET_METHOD(exports, "getFeatures", GetFeatures);
+        NODE_SET_METHOD(exports, "getMap", GetMap);
     }
 
     NODE_MODULE(NODE_GYP_MODULE_NAME, Initialize); // this needs to be at the end, don't touch
