@@ -63,6 +63,7 @@ div.Algo-menu{
     top: 0px;
     left: 400px;
 }
+
 .bg {
     background-image: url("new.jpg");
     height: 100%;
@@ -72,6 +73,9 @@ div.Algo-menu{
 }
 div.Container {
     position: fixed;
-    top: 200px;
-    left: 400px;
+    top: 500px;
+    right: 100px;
+}
+label.labels{
+    color: #eeeeee;
 }

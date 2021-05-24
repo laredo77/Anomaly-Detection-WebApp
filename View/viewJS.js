@@ -130,7 +130,17 @@ function resultHybrid(feature) {
     xhttp2.send()
 }
 
+function disableAlgoMenu(algoName) {
+    // disappear the algo menu after choosing algo
+    var x = document.getElementById("Algo-menu");
+    x.style.display = "none"; // if want to return the menu instead of none write "block"
+    // printing the chosen algo into a label
+    document.getElementById("algoNameLabel").innerHTML = algoName;
+}
+
 function generateFeatures() {
+
+    //document.getElementsByClassName('LinearReg').disabled = "disabled";
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = async function () {
         if (this.readyState === 4 && this.status === 200) {
@@ -146,7 +156,8 @@ function generateFeatures() {
                 featuresSelect.appendChild(option);
             }
             var label = document.createElement("label");
-            label.innerHTML = "Choose a feature: "
+            label.className = "labels";
+            label.innerHTML = "Choose a feature: ";
             label.htmlFor = "features";
             document.getElementById("container").appendChild(label).appendChild(featuresSelect);
         }
