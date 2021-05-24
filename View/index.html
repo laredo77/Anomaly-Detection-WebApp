@@ -27,13 +27,13 @@
         <td>browse detect file:</td>
         <td><input type="file" name="text_detect" accept=".csv"></td>
     </tr>
-    <tr>
-        <input list="Algorithms" name="Algorithm" id="Algorithm">
-        <datalist id="Algorithms">
-            <option value="LinearReg">
-            <option value="HybridAlgorithm">
-        </datalist>
-    </tr>
+<!--    <tr>-->
+<!--        <input list="Algorithms" name="Algorithm" id="Algorithm">-->
+<!--        <datalist id="Algorithms">-->
+<!--            <option value="LinearReg">-->
+<!--            <option value="HybridAlgorithm">-->
+<!--        </datalist>-->
+<!--    </tr>-->
 </table>
 <br>
 <td><input type="submit"></td>
@@ -43,14 +43,18 @@
     <script src = 'viewJS.js'></script>
     <div class="Algo-menu">
         <a href="#" class="active">Algo-Menu</a>
-        <a onclick="setIsLinear(1);">Linear reg</a>
-        <a onclick="setIsLinear(0);">Hybrid algorithm</a>
+        <a onclick="setIsLinear(1);generateFeatures();">Linear reg</a>
+        <a onclick="setIsLinear(0);generateFeatures();">Hybrid algorithm</a>
     </div>
-    <div class="Feature-menu">
-        <a href="#" class="active">Algo-Menu</a>
-        <a onclick="result('A-B');">A-B</a>
-        <a onclick="result('C-D');">C-D</a>
-    </div>
+<!--    <div class="Feature-menu">-->
+<!--        <a href="#" class="active">Algo-Menu</a>-->
+<!--        <a onclick="result('A-B');">A-B</a>-->
+<!--        <a onclick="result('C-D');">C-D</a>-->
+<!--    </div>-->
+
+<!--    features list container-->
+    <div class="Container" id="container"></div>
+    <br>
 </div>
 </body>
 </html>

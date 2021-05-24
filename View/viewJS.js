@@ -1,21 +1,22 @@
 // const delay = ms => new Promise(resolve => setTimeout(resolve, ms))
 // points of anomalies in linear reg
 var isLinear = 0;
-function setIsLinear(value){
-    if(value == 0) {
-        isLinear =0;
-    }
-    else
-        isLinear =1;
+
+function setIsLinear(value) {
+    if (value == 0) {
+        isLinear = 0;
+    } else
+        isLinear = 1;
 }
+
 function result(feature) {
-    if(isLinear == 0) {
+    if (isLinear == 0) {
         resultHybrid(feature);
-    }
-    else {
+    } else {
         resultLinear(feature);
     }
 }
+
 function resultLinear(feature) {
     var trace1;
     var traceInit;
@@ -127,4 +128,29 @@ function resultHybrid(feature) {
     };
     xhttp2.open("POST", "/init/hybrid", true);
     xhttp2.send()
+}
+
+function generateFeatures() {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = async function () {
+        if (this.readyState === 4 && this.status === 200) {
+            // array of features sent from the server
+            var values = JSON.parse(this.response);
+            var featuresSelect = document.createElement("select");
+            featuresSelect.name = "features";
+            featuresSelect.id = "features"
+            for (const val of values) {
+                var option = document.createElement("option");
+                option.value = val;
+                option.text = val;
+                featuresSelect.appendChild(option);
+            }
+            var label = document.createElement("label");
+            label.innerHTML = "Choose a feature: "
+            label.htmlFor = "features";
+            document.getElementById("container").appendChild(label).appendChild(featuresSelect);
+        }
+    };
+    xhttp.open("POST", "/features", true);
+    xhttp.send()
 }

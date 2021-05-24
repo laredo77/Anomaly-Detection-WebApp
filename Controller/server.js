@@ -38,23 +38,22 @@ app.post("/detect", (req, res) => {
             const init_linear_graphs = api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv");
             // console.log(detect_linear_alg)
             // console.log(init_linear_graphs)
-            res.write(detect_linear_alg)
         } else {
             const detect_hybrid_alg = api.detectHybridAlg("anomalyTrain.csv", "anomalyTest.csv");
             const init_hybrid_graphs = api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv");
             // console.log(detect_hybrid_alg)
             // console.log(init_hybrid_graphs)
-            res.write(JSON.stringify(detect_hybrid_alg))
         }
         // test
     }
-    res.end()
+    // res.end()
 })
 const detect_linear_alg = api.detectLinearAlg("anomalyTrain.csv", "anomalyTest.csv");
 const init_linear_graphs = api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv");
 const detect_hybrid_alg = api.detectHybridAlg("anomalyTrain.csv", "anomalyTest.csv");
 const init_hybrid_graphs = api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv");
 const expressionString = "50*x+3";
+const get_features = api.getFeatures("anomalyTrain.csv");
 app.post("/detect/linear", (req, res) => {
     res.send(detect_linear_alg)
 })
@@ -67,18 +66,18 @@ app.post("/init/linear", (req, res) => {
 app.post("/init/hybrid", (req, res) => {
     res.send(expressionString)
 })
+app.post("/features", (req, res) => {
+    res.send(get_features)
+})
 // console.log("LINEAR_PART")
 // console.log(detect_linear_alg)
 // console.log("LINEAR_LINE")
-
-// api.getFeatures
-
-// return map of csv from cpp
- // console.log(api.getMap("anomalyTrain.csv"))
+// console.log(init_linear_graphs)
 // console.log("HYBRID_PART")
 // console.log(detect_hybrid_alg)
 // console.log("HYBRID_CIRCLE")
-
+// console.log(init_hybrid_graphs)
+//console.log(get_features);
 app.listen(8080)
 
 

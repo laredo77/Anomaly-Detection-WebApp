@@ -70,3 +70,8 @@ div.Algo-menu{
     background-repeat: no-repeat;
     background-size: cover;
 }
+div.Container {
+    position: fixed;
+    top: 200px;
+    left: 400px;
+}
