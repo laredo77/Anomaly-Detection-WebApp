@@ -80,7 +80,7 @@ app.post("/features", (req, res) => {
 //console.log(get_features);
 app.listen(8080)
 
-
+//
 // first run "node-gyp configure" and "node-gyp build" for the build and release folders to appear along with your api
 // after this is done, run "node main" to run this file. Every time you change the c++ run "node-gyp build" again,
 // and if you changed anything in the configurations like how many functions you want to use etc, run "node-gyp configure" again
