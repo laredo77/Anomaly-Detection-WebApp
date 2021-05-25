@@ -16,47 +16,207 @@
 <div class="bg">
     <div class="relative" id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
     <!--not sure we need the next line -->
-<form action="/detect" method="POST" enctype="multipart/form-data" name="searchForm" target="result">
-<table>
-    <tr>
-        <td class="tdClass">browse train file:</td>
-        <td><input type="file" name="text_train" accept=".csv"></td>
-    </tr>
-    <tr>
-        <td class="tdClass">browse detect file:</td>
-        <td><input type="file" name="text_detect" accept=".csv"></td>
-    </tr>
-<!--    <tr>-->
-<!--        <input list="Algorithms" name="Algorithm" id="Algorithm">-->
-<!--        <datalist id="Algorithms">-->
-<!--            <option value="LinearReg">-->
-<!--            <option value="HybridAlgorithm">-->
-<!--        </datalist>-->
-<!--    </tr>-->
-</table>
-<br>
-<td><input type="submit"></td>
-</form>
-<br>
-<iframe name="result" width="50%" height="500"></iframe>
-    <script src = 'viewJS.js'></script>
-    <div id = "Algo-menu" class="Algo-menu">
+    <form action="/detect" method="POST" enctype="multipart/form-data" name="searchForm" target="result">
+        <table>
+            <tr>
+                <td class="tdClass">browse train file:</td>
+                <td><input type="file" name="text_train" accept=".csv"></td>
+            </tr>
+            <tr>
+                <td class="tdClass">browse detect file:</td>
+                <td><input type="file" name="text_detect" accept=".csv"></td>
+            </tr>
+            <!--    <tr>-->
+            <!--        <input list="Algorithms" name="Algorithm" id="Algorithm">-->
+            <!--        <datalist id="Algorithms">-->
+            <!--            <option value="LinearReg">-->
+            <!--            <option value="HybridAlgorithm">-->
+            <!--        </datalist>-->
+            <!--    </tr>-->
+        </table>
+        <br>
+        <td><input type="submit"></td>
+    </form>
+    <br>
+    <iframe name="result" width="50%" height="500"></iframe>
+    <div id="Algo-menu" class="Algo-menu">
         <a href="#" class="active">Algo-Menu</a>
-        <a id = "LinearReg"onclick="setIsLinear(1);generateFeatures(); disableAlgoMenu('Linear reg was chosen.')">Linear reg</a>
-        <a id = "HybridAlgorithm" onclick="setIsLinear(0);generateFeatures(); disableAlgoMenu('Hybrid algorithm was chosen.')">Hybrid algorithm</a>
+        <a id="LinearReg"
+           onclick="setIsLinear(1);generateFeatures(); disableAlgoMenu('Linear reg was chosen. Please choose an option:')">Linear
+            reg</a>
+        <a id="HybridAlgorithm"
+           onclick="setIsLinear(0);generateFeatures(); disableAlgoMenu('Hybrid algorithm was chosen.  Please choose an option:')">Hybrid
+            algorithm</a>
     </div>
-
-<!--    <div class="Feature-menu">-->
-<!--        <a href="#" class="active">Algo-Menu</a>-->
-<!--        <a onclick="result('A-B');">A-B</a>-->
-<!--        <a onclick="result('C-D');">C-D</a>-->
-<!--    </div>-->
-
-<!--    features list container-->
     <div class="Container" id="container">
         <label id="algoNameLabel" class="labels"></label>
+        <select id="select" onchange="resultOfSelectedFeature()"></select>
+        <label id="labelselected" class="labels"></label>
     </div>
     <br>
 </div>
+<script>
+    var isLinear = 0;
+
+    function setIsLinear(value) {
+        if (value == 0) {
+            isLinear = 0;
+        } else
+            isLinear = 1;
+    }
+
+    function resultOfSelectedFeature() {
+        var feature = document.getElementById("select").value;
+        //document.getElementById("labelselected").innerHTML = "You selected: " + feature;
+        if (isLinear == 0) {
+            resultHybrid(feature);
+        } else {
+            resultLinear(feature);
+        }
+    }
+
+    function resultLinear(feature) {
+        var trace1;
+        var traceInit;
+        var layout;
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = async function () {
+            if (this.readyState === 4 && this.status === 200) {
+                layout = {
+                    title: 'Linear Reg Algorithm'
+                };
+                var xArray = [];
+                var yArray = [];
+                const dataFromServer = JSON.parse(this.response);
+                for (let i = 0; i < dataFromServer.length; i++) {
+                    if (dataFromServer[i].description === feature) {
+                        xArray.push(dataFromServer[i].Point.x);
+                        yArray.push(dataFromServer[i].Point.y);
+                    }
+                }
+                trace1 = {
+                    x: xArray,
+                    y: yArray,
+                    mode: 'markers'
+                };
+
+            }
+        };
+        xhttp.open("POST", "/detect/linear", true);
+        xhttp.send()
+        var xhttp2 = new XMLHttpRequest();
+        xhttp2.onreadystatechange = async function () {
+            if (this.readyState === 4 && this.status === 200) {
+                try {
+                    const expr = math.compile(this.response)
+                    //instead of the numbers need to put minimum value and maximum
+                    const xValues = math.range(0, 10, 0.5).toArray()
+                    const yValues = xValues.map(function (x) {
+                        return expr.evaluate({x: x})
+                    })
+                    traceInit = {
+                        x: xValues,
+                        y: yValues,
+                        type: 'scatter'
+                    }
+                    var data = [trace1, traceInit];
+                    Plotly.newPlot('myDiv', data, layout)
+                } catch (err) {
+                    console.error(err)
+                    alert(err)
+                }
+            }
+        };
+        xhttp2.open("POST", "/init/linear", true);
+        xhttp2.send()
+    }
+
+    // points of anomalies in Hybrid
+    function resultHybrid(feature) {
+        var trace1;
+        var traceInit;
+        var layout;
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = async function () {
+            if (this.readyState === 4 && this.status === 200) {
+                layout = {
+                    title: 'Hybrid Algorithm'
+                };
+                var xArray = [];
+                var yArray = [];
+                const dataFromServer = JSON.parse(this.response);
+                for (let i = 0; i < dataFromServer.length; i++) {
+                    if (dataFromServer[i].description === feature) {
+                        xArray.push(dataFromServer[i].Point.x);
+                        yArray.push(dataFromServer[i].Point.y);
+                    }
+                }
+                trace1 = {
+                    x: xArray,
+                    y: yArray,
+                    mode: 'markers'
+                };
+
+            }
+        };
+        xhttp.open("POST", "/detect/hybrid", true);
+        xhttp.send()
+        var xhttp2 = new XMLHttpRequest();
+        xhttp2.onreadystatechange = async function () {
+            if (this.readyState === 4 && this.status === 200) {
+                try {
+                    const expr = math.compile(this.response)
+                    //instead of the numbers need to put minimum value and maximum
+                    const xValues = math.range(0, 100, 0.5).toArray()
+                    const yValues = xValues.map(function (x) {
+                        return expr.evaluate({x: x})
+                    })
+                    traceInit = {
+                        x: xValues,
+                        y: yValues,
+                        type: 'scatter'
+                    }
+                    var data = [trace1, traceInit];
+                    Plotly.newPlot('myDiv', data, layout)
+                } catch (err) {
+                    console.error(err)
+                    alert(err)
+                }
+            }
+        };
+        xhttp2.open("POST", "/init/hybrid", true);
+        xhttp2.send()
+    }
+
+    function disableAlgoMenu(algoName) {
+        // disappear the algo menu after choosing algo
+        var x = document.getElementById("Algo-menu");
+        x.style.display = "none"; // if want to return the menu instead of none write "block"
+        // printing the chosen algo into a label
+        document.getElementById("algoNameLabel").innerHTML = algoName;
+    }
+
+    function generateFeatures() {
+        //document.getElementsByClassName('LinearReg').disabled = "disabled";
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = async function () {
+            if (this.readyState === 4 && this.status === 200) {
+                // array of features sent from the server
+                var values = JSON.parse(this.response);
+                for (const val of values) {
+                    var option = document.createElement("option");
+                    option.id = val;
+                    option.value = val;
+                    option.text = val;
+                    document.getElementById("select").appendChild(option);
+                }
+                document.getElementById("container").appendChild(document.getElementById("select"));
+
+            }
+        };
+        xhttp.open("POST", "/features", true);
+        xhttp.send()
+    }
+</script>
 </body>
 </html>

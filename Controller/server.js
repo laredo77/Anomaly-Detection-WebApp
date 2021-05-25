@@ -71,12 +71,12 @@ app.post("/features", (req, res) => {
 })
 // console.log("LINEAR_PART")
 // console.log(detect_linear_alg)
-// console.log("LINEAR_LINE")
-// console.log(init_linear_graphs)
+//console.log("LINEAR_LINE")
+//console.log(init_linear_graphs)
 // console.log("HYBRID_PART")
 // console.log(detect_hybrid_alg)
-// console.log("HYBRID_CIRCLE")
-// console.log(init_hybrid_graphs)
+//console.log("HYBRID_CIRCLE")
+//console.log(init_hybrid_graphs)
 //console.log(get_features);
 app.listen(8080)
 
