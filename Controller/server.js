@@ -43,20 +43,26 @@ app.post("/detect/hybrid", (req, res) => {
     res.send(detect_hybrid_alg)
 })
 app.post("/init/linear", (req, res) => {
-    const expressionString = "50*x+3";
-    //console.log(api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv"));
+    const expressionString = api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv");
+    //console.log(expressionString);
     res.send(expressionString)
 })
 app.post("/init/linear/dots", (req, res) => {
     res.send(...api.getMap("anomalyTrain.csv"))
 })
 app.post("/init/hybrid", (req, res) => {
-    const expressionString = "50*x+3";
-    console.log(api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv"));
+    const expressionString = api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv");
+    //console.log(expressionString);
     res.send(expressionString)
 })
-app.post("/features", (req, res) => {
-    const get_features = api.getFeatures("anomalyTrain.csv");
+
+app.post("/features/linear", (req, res) => {
+    const get_features = api.getLinearFeatures("anomalyTrain.csv");
+    res.send(get_features)
+})
+
+app.post("/features/hybrid", (req, res) => {
+    const get_features = api.getHybridFeatures("anomalyTrain.csv");
     res.send(get_features)
 })
 

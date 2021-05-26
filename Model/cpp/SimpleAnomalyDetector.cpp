@@ -35,8 +35,10 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
                 // Initialize Points array
                 Point *ps[data_s[time_series.get_features()[i]].size()];
                 for (int k = 0; k < data_s[time_series.get_features()[i]].size(); k++) {
-                    ps[k] = new Point(data_s[time_series.get_features()[i]][k],
-                                      data_s[time_series.get_features()[j]][k]);
+                    Point *p = new Point(data_s[time_series.get_features()[i]][k],
+                    data_s[time_series.get_features()[j]][k]);
+                    ps[k] = p;
+                    this->correlated_points.push_back(*p);
                 }
                 // get linear reg
                 Line lin_reg = linear_reg(ps, data_s[time_series.get_features()[i]].size());
@@ -140,8 +142,10 @@ void SimpleAnomalyDetector::learnNormalLinear(const TimeSeries &ts) {
                 // Initialize Points array
                 Point *ps[data_s[time_series.get_features()[i]].size()];
                 for (int k = 0; k < data_s[time_series.get_features()[i]].size(); k++) {
-                    ps[k] = new Point(data_s[time_series.get_features()[i]][k],
-                                      data_s[time_series.get_features()[j]][k]);
+                    Point *p = new Point(data_s[time_series.get_features()[i]][k],
+                    data_s[time_series.get_features()[j]][k]);
+                    ps[k] = p;
+                    this->correlated_points.push_back(*p);
                 }
                 // get linear reg
                 Line lin_reg = linear_reg(ps, data_s[time_series.get_features()[i]].size());

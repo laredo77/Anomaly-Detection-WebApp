@@ -29,6 +29,7 @@ protected:
     vector<correlatedFeatures> cf;
     vector<AnomalyReport> v_ar;
     vector<Point> anomaly_points;
+    vector<Point> correlated_points;
 public:
     SimpleAnomalyDetector();
     virtual ~SimpleAnomalyDetector();
@@ -49,6 +50,10 @@ public:
 
     vector<Point> getAnomalyPoints() {
         return anomaly_points;
+    }
+
+    vector<Point> getCorrelatedPoints() {
+        return correlated_points;
     }
 };
 

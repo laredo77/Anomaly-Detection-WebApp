@@ -67,10 +67,10 @@
                 Local<Object> point = Object::New(isolate);
                 // set point
                 point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "-" + cf[i].feature2).c_str()));
-                point->Set(String::NewFromUtf8(isolate, "x+"), Number::New(isolate, cf[i].x + cf[i].radius));
-                point->Set(String::NewFromUtf8(isolate, "y+"), Number::New(isolate, cf[i].y + cf[i].radius));
-                point->Set(String::NewFromUtf8(isolate, "x-"), Number::New(isolate, cf[i].x - cf[i].radius));
-                point->Set(String::NewFromUtf8(isolate, "y-"), Number::New(isolate, cf[i].y - cf[i].radius));
+                point->Set(String::NewFromUtf8(isolate, "xPlus"), Number::New(isolate, cf[i].x + cf[i].radius));
+                point->Set(String::NewFromUtf8(isolate, "yPlus"), Number::New(isolate, cf[i].y + cf[i].radius));
+                point->Set(String::NewFromUtf8(isolate, "xMinus"), Number::New(isolate, cf[i].x - cf[i].radius));
+                point->Set(String::NewFromUtf8(isolate, "yMinus"), Number::New(isolate, cf[i].y - cf[i].radius));
                 // create point with data
                 correlated_point->Set(String::NewFromUtf8(isolate, "point"), point);
                 points->Set(i, correlated_point);
@@ -87,31 +87,30 @@
         string csvFileName = *v8::String::Utf8Value(args[0]); // get first argument sent from JS and converts it to string we can use
         TimeSeries ts(csvFileName);
         HybridAnomalyDetector ad;
-        ad.learnNormal(ts);
+        ad.learnNormalLinear(ts);
         vector<correlatedFeatures> cf=ad.getNormalModel();
 
         // create array
         Local<Array> points = Array::New(isolate);
 
         for (int i = 0; i < cf.size(); i++) {
-            if (cf[i].corrlation > 0.9) {
-                Local<Object> correlated_point = Object::New(isolate);
-                // create a and b
-                string a(to_string(cf[i].lin_reg.a));
-                string b(to_string(cf[i].lin_reg.b));
-                // type
-                correlated_point->Set(String::NewFromUtf8(isolate, "type"), String::NewFromUtf8(isolate, "line"));
-                // create point
-                Local<Object> point = Object::New(isolate);
-                // set point
-                point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "-" + cf[i].feature2).c_str()));
-                if(std::stof(b) < 0)
-                    point->Set(String::NewFromUtf8(isolate, "expression"), String::NewFromUtf8(isolate, (a+"*x"+b).c_str()));
-                else
-                    point->Set(String::NewFromUtf8(isolate, "expression"), String::NewFromUtf8(isolate, (a+"*x"+"+"+b).c_str()));
-                correlated_point->Set(String::NewFromUtf8(isolate, "point"), point);
-                points->Set(i, correlated_point);
-            }
+            Local<Object> correlated_point = Object::New(isolate);
+            // create a and b
+            string a(to_string(cf[i].lin_reg.a));
+            string b(to_string(cf[i].lin_reg.b));
+            // type
+            correlated_point->Set(String::NewFromUtf8(isolate, "type"), String::NewFromUtf8(isolate, "line"));
+            // create point
+            Local<Object> point = Object::New(isolate);
+            // set point
+            point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "-" + cf[i].feature2).c_str()));
+            if(std::stof(b) < 0)
+                point->Set(String::NewFromUtf8(isolate, "expression"), String::NewFromUtf8(isolate, (a+"*x"+b).c_str()));
+            else
+                point->Set(String::NewFromUtf8(isolate, "expression"), String::NewFromUtf8(isolate, (a+"*x"+"+"+b).c_str()));
+            correlated_point->Set(String::NewFromUtf8(isolate, "point"), point);
+            points->Set(i, correlated_point);
+
         }
         args.GetReturnValue().Set(points);
     }
@@ -184,14 +183,13 @@
 
 
     // maoz fix
-    void GetFeatures(const FunctionCallbackInfo<Value>&args) {
+    void GetLinearFeatures(const FunctionCallbackInfo<Value>&args) {
         Isolate* isolate = args.GetIsolate();
         string csvFileName = *v8::String::Utf8Value(args[0]);
         TimeSeries ts(csvFileName);
         HybridAnomalyDetector ad;
-        ad.learnNormal(ts);
+        ad.learnNormalLinear(ts);
         vector<correlatedFeatures> cf=ad.getNormalModel();
-
 
         Local<Array> features = Array::New(isolate);
 
@@ -200,6 +198,52 @@
         }
         args.GetReturnValue().Set(features);
     }
+
+    void GetHybridFeatures(const FunctionCallbackInfo<Value>&args) {
+        Isolate* isolate = args.GetIsolate();
+        string csvFileName = *v8::String::Utf8Value(args[0]);
+        TimeSeries ts(csvFileName);
+        HybridAnomalyDetector ad;
+        ad.learnNormal(ts);
+        vector<correlatedFeatures> cf=ad.getNormalModel();
+
+        Local<Array> features = Array::New(isolate);
+
+        for (int i = 0; i < cf.size(); i++) {
+            features->Set(i, String::NewFromUtf8(isolate, (cf[i].feature1+"-"+cf[i].feature2).c_str()));
+        }
+        args.GetReturnValue().Set(features);
+    }
+
+//    void GetLinearPoints(const FunctionCallbackInfo<Value>&args) {
+//        Isolate* isolate = args.GetIsolate();
+//        string csvFileName = *v8::String::Utf8Value(args[0]);
+//        TimeSeries ts(csvFileName);
+//        HybridAnomalyDetector ad;
+//        ad.learnNormal(ts);
+//        vector<Point> cp=ad.getCorrelatedPoints();
+//
+//        // create javascript array of AnomalyReport
+//        Local<Array> reports = Array::New(isolate);
+//
+//        // create objects
+//        for (int i = 0; i < r.size() && i < anomaly_points.size(); i++) {
+//         Local<Object> report = Object::New(isolate);
+//         report->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate, r[i].description.c_str()));
+//         report->Set(String::NewFromUtf8(isolate, "timeStep"), Number::New(isolate, r[i].timeStep));
+//         Local<Object> point = Object::New(isolate);
+//         point->Set(String::NewFromUtf8(isolate, "x"), Number::New(isolate, anomaly_points[i].x));
+//         point->Set(String::NewFromUtf8(isolate, "y"), Number::New(isolate, anomaly_points[i].y));
+//         report->Set(String::NewFromUtf8(isolate, "Point"), point);
+//         reports->Set(i, report);
+//        }
+//        Local<Array> features = Array::New(isolate);
+//
+//        for (int i = 0; i < cf.size(); i++) {
+//            features->Set(i, String::NewFromUtf8(isolate, (cf[i].feature1+"-"+cf[i].feature2).c_str()));
+//        }
+//        args.GetReturnValue().Set(features);
+//    }
 
         void GetMap(const FunctionCallbackInfo<Value>&args) {
             Isolate* isolate = args.GetIsolate();
@@ -232,7 +276,8 @@
         NODE_SET_METHOD(exports, "initializeLinearGraphs", InitializeLinearGraphs);
         NODE_SET_METHOD(exports, "detectHybridAlg", DetectHybridAlg);
         NODE_SET_METHOD(exports, "detectLinearAlg", DetectLinearAlg);
-        NODE_SET_METHOD(exports, "getFeatures", GetFeatures);
+        NODE_SET_METHOD(exports, "getLinearFeatures", GetLinearFeatures);
+        NODE_SET_METHOD(exports, "getHybridFeatures", GetHybridFeatures);
         NODE_SET_METHOD(exports, "getMap", GetMap);
     }
 

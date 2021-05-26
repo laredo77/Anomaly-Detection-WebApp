@@ -43,10 +43,10 @@
     <div id="Algo-menu" class="Algo-menu" style="display: none">
         <a href="#" class="active">Algo-Menu</a>
         <a id="LinearReg"
-           onclick="setIsLinear(1);generateFeatures(); disableAlgoMenu(); choseAlgo('Linear reg was chosen. Please choose an option:');sendAlgo('LinearReg')">Linear
+           onclick="setIsLinear(1);generateLinearFeatures(); disableAlgoMenu(); choseAlgo('Linear reg was chosen. Please choose an option:');sendAlgo('LinearReg')">Linear
             reg</a>
         <a id="HybridAlgorithm"
-           onclick="setIsLinear(0);generateFeatures(); disableAlgoMenu(); choseAlgo('Hybrid algorithm was chosen.  Please choose an option:');sendAlgo('Hybrid')">Hybrid
+           onclick="setIsLinear(0);generateHybridFeatures(); disableAlgoMenu(); choseAlgo('Hybrid algorithm was chosen.  Please choose an option:');sendAlgo('Hybrid')">Hybrid
             algorithm</a>
     </div>
     <div class="Container" id="container">
@@ -158,11 +158,22 @@
         xhttp2.onreadystatechange = async function () {
             if (this.readyState === 4 && this.status === 200) {
                 try {
-                    const expr = math.compile(this.response)
+
+                    var expr;
+                    const dataFromServer2 = JSON.parse(this.response);
+                    for (let i = 0; i < dataFromServer2.length; i++) {
+                        if (dataFromServer2[i].point.description === feature) {
+                            //expressionsArray.push(dataFromServer2[i].expression);
+                            expr = math.compile(dataFromServer2[i].point.expression);
+                            break;
+                        }
+                    }
+
+                    const expression = expr;
                     //instead of the numbers need to put minimum value and maximum
                     const xValues = math.range(0, 600, 0.5).toArray()
                     const yValues = xValues.map(function (x) {
-                        return expr.evaluate({x: x})
+                        return expression.evaluate({x: x})
                     })
                     traceInit = {
                         x: xValues,
@@ -218,19 +229,78 @@
         xhttp2.onreadystatechange = async function () {
             if (this.readyState === 4 && this.status === 200) {
                 try {
-                    const expr = math.compile(this.response)
-                    //instead of the numbers need to put minimum value and maximum
-                    const xValues = math.range(0, 100, 0.5).toArray()
-                    const yValues = xValues.map(function (x) {
-                        return expr.evaluate({x: x})
-                    })
-                    traceInit = {
-                        x: xValues,
-                        y: yValues,
-                        type: 'scatter'
+                    var expr = null;
+                    var xPlus, yPlus, xMinus, yMinus;
+                    const dataFromServer2 = JSON.parse(this.response);
+                    for (let i = 0; i < dataFromServer2.length; i++) {
+                        if (dataFromServer2[i].point.description === feature) {
+                            //expressionsArray.push(dataFromServer2[i].expression);
+                            if (dataFromServer2[i].type === 'line') {
+                                expr = math.compile(dataFromServer2[i].point.expression);
+                                break;
+                            } else {
+                                xPlus =  dataFromServer2[i].point.xPlus;
+                                xMinus = dataFromServer2[i].point.xMinus;
+                                yPlus =  dataFromServer2[i].point.yPlus;
+                                yMinus =  dataFromServer2[i].point.yMinus;
+                            }
+                        }
                     }
-                    var data = [trace1, traceInit];
-                    Plotly.newPlot('myDiv', data, layout)
+
+                    const expression = expr;
+                    if (expression != null) {
+                        //instead of the numbers need to put minimum value and maximum
+                        const xValues = math.range(0, 10, 0.5).toArray()
+                        const yValues = xValues.map(function (x) {
+                            return expression.evaluate({x: x})
+                        })
+                        traceInit = {
+                            x: xValues,
+                            y: yValues,
+                            type: 'scatter'
+                        }
+                        var data = [trace1, traceInit];
+                        Plotly.newPlot('myDiv', data, layout)
+                    } else {
+                        // var trace1 = {
+                        //     x: [1.5, 3.5],
+                        //     y: [0.75, 2.5],
+                        //     text: ['Unfilled Circle', 'Filled Circle'],
+                        //     mode: 'text'
+                        // };
+
+                        var layout = {
+                            title: 'Circles',
+                            xaxis: {
+                                range: [xMinus-10, xPlus+10],
+                                zeroline: false
+                            },
+                            yaxis: {
+                                range: [yMinus-10, yPlus+10]
+                            },
+                            width: 500,
+                            height: 500,
+                            shapes: [
+                                {
+                                    type: 'circle',
+                                    xref: 'x',
+                                    yref: 'y',
+                                    x0: xMinus,
+                                    y0: yMinus,
+                                    x1: xPlus,
+                                    y1: yPlus,
+                                    line: {
+                                        color: 'rgba(50, 171, 96, 1)'
+                                    }
+                                }
+                            ]
+                        };
+
+                        var data = [trace1];
+
+                        Plotly.newPlot('myDiv', data, layout);
+                    }
+
                 } catch (err) {
                     console.error(err)
                     alert(err)
@@ -257,7 +327,7 @@
         x.style.display = "block"; // if want to return the menu instead of none write "block"
     }
 
-    function generateFeatures() {
+    function generateLinearFeatures() {
         //document.getElementsByClassName('LinearReg').disabled = "disabled";
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = async function () {
@@ -275,7 +345,29 @@
 
             }
         };
-        xhttp.open("POST", "/features", true);
+        xhttp.open("POST", "/features/linear", true);
+        xhttp.send()
+    }
+
+    function generateHybridFeatures() {
+        //document.getElementsByClassName('LinearReg').disabled = "disabled";
+        var xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = async function () {
+            if (this.readyState === 4 && this.status === 200) {
+                // array of features sent from the server
+                var values = JSON.parse(this.response);
+                for (const val of values) {
+                    var option = document.createElement("option");
+                    option.id = val;
+                    option.value = val;
+                    option.text = val;
+                    document.getElementById("select").appendChild(option);
+                }
+                document.getElementById("container").appendChild(document.getElementById("select"));
+
+            }
+        };
+        xhttp.open("POST", "/features/hybrid", true);
         xhttp.send()
     }
 
