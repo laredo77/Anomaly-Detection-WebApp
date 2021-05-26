@@ -23,7 +23,6 @@ app.post("/upload", (req, res) => {
     if (req.files) {
         var csv_train = req.files.text_train
         var csv_detect = req.files.text_detect
-
         // upload File physically and not through link (ZERO BYTES) like const fs = require('fs');
         var text = csv_detect.data.toString()
         fs.writeFileSync(csv_detect.name, text)
@@ -35,8 +34,6 @@ app.post("/upload", (req, res) => {
     else res.sendStatus(400);
 
 })
-
-
 app.post("/detect/linear", (req, res) => {
     const detect_linear_alg = api.detectLinearAlg("anomalyTrain.csv", "anomalyTest.csv");
     res.send(detect_linear_alg)
@@ -47,8 +44,12 @@ app.post("/detect/hybrid", (req, res) => {
 })
 app.post("/init/linear", (req, res) => {
     const expressionString = "50*x+3";
+    //console.log(api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv"));
     res.send(expressionString)
 })
+// app.post("/init/linear/dots", (req, res) => {
+//     res.send(...api.getMap("anomalyTest.csv"))
+// })
 app.post("/init/hybrid", (req, res) => {
     const expressionString = "50*x+3";
     res.send(expressionString)
@@ -58,17 +59,8 @@ app.post("/features", (req, res) => {
     res.send(get_features)
 })
 
-// console.log("LINEAR_PART")
-// console.log(detect_linear_alg)
-// console.log("LINEAR_LINE")
-// console.log(init_linear_graphs)
-// console.log("HYBRID_PART")
-// console.log(detect_hybrid_alg)
-//console.log("HYBRID_CIRCLE")
-//console.log(init_hybrid_graphs)
-//console.log(get_features);
-
 app.listen(8080)
+
 //
 // first run "node-gyp configure" and "node-gyp build" for the build and release folders to appear along with your api
 // after this is done, run "node main" to run this file. Every time you change the c++ run "node-gyp build" again,

@@ -72,7 +72,7 @@ div.Algo-menu{
 }
 div.Container {
     position: fixed;
-    top: 500px;
+    top: 400px;
     right: 100px;
 }
 label.labels{
@@ -81,4 +81,7 @@ label.labels{
 
 iframe.iframeClass{
     border: 0px;
+}
+p.paragraphAnomalies{
+color: #eeeeee;
 }
