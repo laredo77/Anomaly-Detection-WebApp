@@ -36,10 +36,10 @@
     <div id="Algo-menu" class="Algo-menu" style= "display: none">
         <a href="#" class="active">Algo-Menu</a>
         <a id="LinearReg"
-           onclick="setIsLinear(1);generateFeatures(); disableAlgoMenu(); choseAlgo('Linear reg was chosen. Please choose an option:')">Linear
+           onclick="setIsLinear(1);generateFeatures(); disableAlgoMenu(); choseAlgo('Linear reg was chosen. Please choose an option:');sendAlgo('LinearReg')">Linear
             reg</a>
         <a id="HybridAlgorithm"
-           onclick="setIsLinear(0);generateFeatures(); disableAlgoMenu(); choseAlgo('Hybrid algorithm was chosen.  Please choose an option:')">Hybrid
+           onclick="setIsLinear(0);generateFeatures(); disableAlgoMenu(); choseAlgo('Hybrid algorithm was chosen.  Please choose an option:');sendAlgo('Hybrid')">Hybrid
             algorithm</a>
     </div>
     <div class="Container" id="container">
@@ -51,6 +51,11 @@
 </div>
 <script>
     var isLinear = 0;
+    function sendAlgo(algoName){
+        var xhttp = new XMLHttpRequest();
+        xhttp.open("POST", "/detect", true);
+        xhttp.send(algoName)
+    }
 
     function cleanFeatureList() {
         document.getElementById("select").options.length = 0;
