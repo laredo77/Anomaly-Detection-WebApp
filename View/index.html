@@ -10,36 +10,36 @@
     <script src="https://unpkg.com/mathjs@9.4.0/lib/browser/math.js"></script>
     <script src="https://cdn.plot.ly/plotly-1.35.2.min.js"></script>
     <style>
-        #more {display: none;}
+        #more {
+            display: none;
+        }
     </style>
 </head>
 <body>
-
-
-
 <div class="bg">
-
-<div id="plot"></div>
-
-
-<div class="relative" id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
-<!--not sure we need the next line -->
-<form method="post" action="/upload" enctype="multipart/form-data" onsubmit="return submitForm(this);" >
-    <table>
-        <tr>
-            <td class="tdClass">browse train file:</td>
-            <td><input type="file" name="text_train" accept=".csv"></td>
-        </tr>
-        <tr>
-            <td class="tdClass">browse detect file:</td>
-            <td><input type="file" name="text_detect" accept=".csv"></td>
-        </tr>
-    </table>
+    <div id="plot"></div>
+    <div class="relative" id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+    <!--not sure we need the next line -->
+    <form method="post" action="/upload" enctype="multipart/form-data" onsubmit="return submitForm(this);">
+        <table class="tableClass">
+            <tr>
+                <label class="WebsiteTitle">Welcome to our website!</label>
+            </tr>
+            <tr>
+                <td class="tdClass"> Browse train file:</td>
+                <td><input type="file" name="text_train" accept=".csv"></td>
+            </tr>
+            <tr>
+                <td class="tdClass"> Browse detect file:</td>
+                <td><input type="file" name="text_detect" accept=".csv"></td>
+            </tr>
+            <tr>
+                <br>
+                <td><input type="submit" value="Submit" ></td>
+            </tr>
+        </table>
+    </form>
     <br>
-    <td><input type="submit" value="Submit"></td>
-</form>
-<br>
-
     <div id="Algo-menu" class="Algo-menu" style="display: none">
         <a href="#" class="active">Algo-Menu</a>
         <a id="LinearReg"
@@ -53,17 +53,14 @@
         <label id="algoNameLabel" class="labels"></label>
         <select id="select" onchange="resultOfSelectedFeature()"></select>
         <label id="labelselected" class="labels"></label>
-<!--        <p><span id="more"></span></p>-->
-<!--        <button onclick="openTextFunc()" id="myBtn">Open anomalies list</button>-->
-        <p class = "paragraphAnomalies" id="demo"></p>
+        <p class="paragraphAnomalies" id="demo"></p>
     </div>
     <br>
 </div>
 <script>
 
     // maoz part - dont touch
-    function submitForm(oFormElement)
-    {
+    function submitForm(oFormElement) {
         var xhr = new XMLHttpRequest();
         xhr.open(oFormElement.method, oFormElement.getAttribute("action"));
 
@@ -103,7 +100,6 @@
 
     function resultOfSelectedFeature() {
         var feature = document.getElementById("select").value;
-        //document.getElementById("labelselected").innerHTML = "You selected: " + feature;
         if (isLinear == 0) {
             resultHybrid(feature);
         } else {
@@ -112,6 +108,21 @@
     }
 
     function resultLinear(feature) {
+        var featureSplit = feature.split("-");
+        var firstFeature = featureSplit[0];
+
+        var secondFeature = featureSplit[1];
+        var maxX = 0;
+        var minX = 0;
+        var xhttp0 = new XMLHttpRequest();
+        xhttp0.onreadystatechange = async function () {
+            if (this.readyState === 4 && this.status === 200) {
+                maxX = Math.max(this.response.get(firstFeature))
+                minX = Math.min(this.response.get(firstFeature))
+            }
+        };
+        xhttp0.open("POST", "/init/linear/dots", true);
+        xhttp0.send()
         var trace1;
         var traceInit;
         var layout;
@@ -149,7 +160,7 @@
                 try {
                     const expr = math.compile(this.response)
                     //instead of the numbers need to put minimum value and maximum
-                    const xValues = math.range(0, 10, 0.5).toArray()
+                    const xValues = math.range(0, 600, 0.5).toArray()
                     const yValues = xValues.map(function (x) {
                         return expr.evaluate({x: x})
                     })
@@ -167,8 +178,6 @@
                 }
             }
         };
-
-
         xhttp2.open("POST", "/init/linear", true);
         xhttp2.send()
     }
@@ -269,12 +278,13 @@
         xhttp.open("POST", "/features", true);
         xhttp.send()
     }
+
     function myFunction(timeStepArray, xArray, yArray) {
         var text, i;
 
         text = "<ul>";
         for (i = 0; i < timeStepArray.length; i++) {
-            text += "<li>" + "timeStep: " + timeStepArray[i] + ", (" + xArray[i] + "," + yArray[i] + ")" + "</li>";
+            text += "<li>" + "timeStep: " + timeStepArray[i] + "\t\t (" + xArray[i].toFixed(2) + "," + yArray[i].toFixed(2) + ")" + "</li>";
         }
         text += "</ul>";
 

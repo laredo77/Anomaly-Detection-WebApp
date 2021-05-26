@@ -85,3 +85,15 @@ iframe.iframeClass{
 p.paragraphAnomalies{
 color: #eeeeee;
 }
+table.tableClass{
+    position: fixed;
+    left: 20px;
+    top: 70px;
+    color: #eeeeee;
+}
+label.WebsiteTitle{
+    font-size: 50px;
+    color: #eeeeee;
+    position: fixed;
+    left: 20px;
+}

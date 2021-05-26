@@ -47,9 +47,9 @@ app.post("/init/linear", (req, res) => {
     //console.log(api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv"));
     res.send(expressionString)
 })
-// app.post("/init/linear/dots", (req, res) => {
-//     res.send(...api.getMap("anomalyTest.csv"))
-// })
+app.post("/init/linear/dots", (req, res) => {
+    res.send(...api.getMap("anomalyTrain.csv"))
+})
 app.post("/init/hybrid", (req, res) => {
     const expressionString = "50*x+3";
     console.log(api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv"));
