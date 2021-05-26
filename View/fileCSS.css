@@ -56,7 +56,6 @@ div.relative {
     right:0px;
     height: 400px;
     width: 600px;
-    border:3px solid #4e004e;
 }
 div.Algo-menu{
     position: fixed;
@@ -78,4 +77,7 @@ div.Container {
 }
 label.labels{
     color: #eeeeee;
+}
+iframe.iframeClass{
+    border: 0px;
 }

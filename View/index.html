@@ -11,6 +11,7 @@
     <script src="https://cdn.plot.ly/plotly-1.35.2.min.js"></script>
 </head>
 <body>
+
 <div id="plot"></div>
 
 <div class="bg">
@@ -26,26 +27,19 @@
                 <td class="tdClass">browse detect file:</td>
                 <td><input type="file" name="text_detect" accept=".csv"></td>
             </tr>
-            <!--    <tr>-->
-            <!--        <input list="Algorithms" name="Algorithm" id="Algorithm">-->
-            <!--        <datalist id="Algorithms">-->
-            <!--            <option value="LinearReg">-->
-            <!--            <option value="HybridAlgorithm">-->
-            <!--        </datalist>-->
-            <!--    </tr>-->
         </table>
         <br>
-        <td><input type="submit"></td>
+        <td><input type="submit" onclick="showAlgoMenu(); cleanFeatureList()"></td>
     </form>
     <br>
-    <iframe name="result" width="50%" height="500"></iframe>
-    <div id="Algo-menu" class="Algo-menu">
+    <iframe class="iframeClass" name="result" width="50%" height="500"></iframe>
+    <div id="Algo-menu" class="Algo-menu" style= "display: none">
         <a href="#" class="active">Algo-Menu</a>
         <a id="LinearReg"
-           onclick="setIsLinear(1);generateFeatures(); disableAlgoMenu('Linear reg was chosen. Please choose an option:')">Linear
+           onclick="setIsLinear(1);generateFeatures(); disableAlgoMenu(); choseAlgo('Linear reg was chosen. Please choose an option:')">Linear
             reg</a>
         <a id="HybridAlgorithm"
-           onclick="setIsLinear(0);generateFeatures(); disableAlgoMenu('Hybrid algorithm was chosen.  Please choose an option:')">Hybrid
+           onclick="setIsLinear(0);generateFeatures(); disableAlgoMenu(); choseAlgo('Hybrid algorithm was chosen.  Please choose an option:')">Hybrid
             algorithm</a>
     </div>
     <div class="Container" id="container">
@@ -57,6 +51,10 @@
 </div>
 <script>
     var isLinear = 0;
+
+    function cleanFeatureList() {
+        document.getElementById("select").options.length = 0;
+    }
 
     function setIsLinear(value) {
         if (value == 0) {
@@ -188,12 +186,20 @@
         xhttp2.send()
     }
 
-    function disableAlgoMenu(algoName) {
+    function disableAlgoMenu() {
         // disappear the algo menu after choosing algo
         var x = document.getElementById("Algo-menu");
         x.style.display = "none"; // if want to return the menu instead of none write "block"
+    }
+
+    function choseAlgo(algoName) {
         // printing the chosen algo into a label
         document.getElementById("algoNameLabel").innerHTML = algoName;
+    }
+
+    function showAlgoMenu() {
+        var x = document.getElementById("Algo-menu");
+        x.style.display = "block"; // if want to return the menu instead of none write "block"
     }
 
     function generateFeatures() {
