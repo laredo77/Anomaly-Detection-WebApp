@@ -188,9 +188,11 @@
                 };
                 var xArray = [];
                 var yArray = [];
+                var timeStepArray = [];
                 const dataFromServer = JSON.parse(this.response);
                 for (let i = 0; i < dataFromServer.length; i++) {
                     if (dataFromServer[i].description === feature) {
+                        timeStepArray.push(dataFromServer[i].timeStep);
                         xArray.push(dataFromServer[i].Point.x);
                         yArray.push(dataFromServer[i].Point.y);
                     }
@@ -200,7 +202,7 @@
                     y: yArray,
                     mode: 'markers'
                 };
-
+                myFunction(timeStepArray, xArray, yArray);
             }
         };
         xhttp.open("POST", "/detect/hybrid", true);
