@@ -17,14 +17,12 @@ app.get("/", (req, res) => {
     res.sendFile("./index.html")
 })
 
-app.post("/detect", (req, res) => {
+app.post("/upload", (req, res) => {
     // res.write('searching for ' + req.body.key + ':\n')
 
     if (req.files) {
         var csv_train = req.files.text_train
         var csv_detect = req.files.text_detect
-        var algo_type = req.body.Algorithm
-
 
         // upload File physically and not through link (ZERO BYTES) like const fs = require('fs');
         var text = csv_detect.data.toString()
@@ -32,41 +30,31 @@ app.post("/detect", (req, res) => {
 
         text = csv_train.data.toString()
         fs.writeFileSync(csv_train.name, text)
-
-        if (algo_type === "RegLinear") {
-            const detect_linear_alg = api.detectLinearAlg("anomalyTrain.csv", "anomalyTest.csv");
-            const init_linear_graphs = api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv");
-            // console.log(detect_linear_alg)
-            // console.log(init_linear_graphs)
-        } else {
-            const detect_hybrid_alg = api.detectHybridAlg("anomalyTrain.csv", "anomalyTest.csv");
-            const init_hybrid_graphs = api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv");
-            // console.log(detect_hybrid_alg)
-            // console.log(init_hybrid_graphs)
-        }
-        // test
+        res.sendStatus(200);
     }
-    // res.end()
+    else res.sendStatus(400);
+
 })
-const detect_linear_alg = api.detectLinearAlg("anomalyTrain.csv", "anomalyTest.csv");
-const init_linear_graphs = api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv");
-const detect_hybrid_alg = api.detectHybridAlg("anomalyTrain.csv", "anomalyTest.csv");
-const init_hybrid_graphs = api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv");
-const expressionString = "50*x+3";
-const get_features = api.getFeatures("anomalyTrain.csv");
+
+
 app.post("/detect/linear", (req, res) => {
+    const detect_linear_alg = api.detectLinearAlg("anomalyTrain.csv", "anomalyTest.csv");
     res.send(detect_linear_alg)
 })
 app.post("/detect/hybrid", (req, res) => {
+    const detect_hybrid_alg = api.detectHybridAlg("anomalyTrain.csv", "anomalyTest.csv");
     res.send(detect_hybrid_alg)
 })
 app.post("/init/linear", (req, res) => {
+    const expressionString = "50*x+3";
     res.send(expressionString)
 })
 app.post("/init/hybrid", (req, res) => {
+    const expressionString = "50*x+3";
     res.send(expressionString)
 })
 app.post("/features", (req, res) => {
+    const get_features = api.getFeatures("anomalyTrain.csv");
     res.send(get_features)
 })
 // console.log("LINEAR_PART")

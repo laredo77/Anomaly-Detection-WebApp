@@ -12,28 +12,32 @@
 </head>
 <body>
 
-<div id="plot"></div>
+
 
 <div class="bg">
-    <div class="relative" id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
-    <!--not sure we need the next line -->
-    <form action="/detect" method="POST" enctype="multipart/form-data" name="searchForm" target="result">
-        <table>
-            <tr>
-                <td class="tdClass">browse train file:</td>
-                <td><input type="file" name="text_train" accept=".csv"></td>
-            </tr>
-            <tr>
-                <td class="tdClass">browse detect file:</td>
-                <td><input type="file" name="text_detect" accept=".csv"></td>
-            </tr>
-        </table>
-        <br>
-        <td><input type="submit" onclick="showAlgoMenu(); cleanFeatureList()"></td>
-    </form>
+
+<div id="plot"></div>
+
+
+<div class="relative" id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
+<!--not sure we need the next line -->
+<form method="post" action="/upload" enctype="multipart/form-data" onsubmit="return submitForm(this);" >
+    <table>
+        <tr>
+            <td class="tdClass">browse train file:</td>
+            <td><input type="file" name="text_train" accept=".csv"></td>
+        </tr>
+        <tr>
+            <td class="tdClass">browse detect file:</td>
+            <td><input type="file" name="text_detect" accept=".csv"></td>
+        </tr>
+    </table>
     <br>
-    <iframe class="iframeClass" name="result" width="50%" height="500"></iframe>
-    <div id="Algo-menu" class="Algo-menu" style= "display: none">
+    <td><input type="submit" value="Submit"></td>
+</form>
+<br>
+
+    <div id="Algo-menu" class="Algo-menu" style="display: none">
         <a href="#" class="active">Algo-Menu</a>
         <a id="LinearReg"
            onclick="setIsLinear(1);generateFeatures(); disableAlgoMenu(); choseAlgo('Linear reg was chosen. Please choose an option:');sendAlgo('LinearReg')">Linear
@@ -50,8 +54,34 @@
     <br>
 </div>
 <script>
+
+    // maoz part - dont touch
+    function submitForm(oFormElement)
+    {
+        var xhr = new XMLHttpRequest();
+        xhr.open(oFormElement.method, oFormElement.getAttribute("action"));
+
+
+        xhr.onload = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                showAlgoMenu();
+                cleanFeatureList();
+            }
+        };
+
+
+        xhr.send(new FormData(oFormElement));
+        return false;
+    }
+
+
+
+
+    // ofir part
+    // please organize/simplify i can't read that
     var isLinear = 0;
-    function sendAlgo(algoName){
+
+    function sendAlgo(algoName) {
         var xhttp = new XMLHttpRequest();
         xhttp.open("POST", "/detect", true);
         xhttp.send(algoName)
