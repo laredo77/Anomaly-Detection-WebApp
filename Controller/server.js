@@ -52,6 +52,7 @@ app.post("/init/linear", (req, res) => {
 // })
 app.post("/init/hybrid", (req, res) => {
     const expressionString = "50*x+3";
+    console.log(api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv"));
     res.send(expressionString)
 })
 app.post("/features", (req, res) => {

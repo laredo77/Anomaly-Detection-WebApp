@@ -53,7 +53,10 @@
                 Local<Object> point = Object::New(isolate);
                 // set point
                 point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "-" + cf[i].feature2).c_str()));
-                point->Set(String::NewFromUtf8(isolate, "expression"), String::NewFromUtf8(isolate, (a+"*x"+b).c_str()));
+                if (std::stod(b) < 0)
+                    point->Set(String::NewFromUtf8(isolate, "expression"), String::NewFromUtf8(isolate, (a+"*x"+b).c_str()));
+                else
+                    point->Set(String::NewFromUtf8(isolate, "expression"), String::NewFromUtf8(isolate, (a+"*x"+"+"+b).c_str()));
                 correlated_point->Set(String::NewFromUtf8(isolate, "point"), point);
                 points->Set(i, correlated_point);
             }
@@ -102,7 +105,10 @@
                 Local<Object> point = Object::New(isolate);
                 // set point
                 point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "-" + cf[i].feature2).c_str()));
-                point->Set(String::NewFromUtf8(isolate, "expression"), String::NewFromUtf8(isolate, (a+"*x"+b).c_str()));
+                if(std::stof(b) < 0)
+                    point->Set(String::NewFromUtf8(isolate, "expression"), String::NewFromUtf8(isolate, (a+"*x"+b).c_str()));
+                else
+                    point->Set(String::NewFromUtf8(isolate, "expression"), String::NewFromUtf8(isolate, (a+"*x"+"+"+b).c_str()));
                 correlated_point->Set(String::NewFromUtf8(isolate, "point"), point);
                 points->Set(i, correlated_point);
             }
