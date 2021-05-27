@@ -110,15 +110,14 @@
     function resultLinear(feature) {
         var featureSplit = feature.split("-");
         var firstFeature = featureSplit[0];
-
         var secondFeature = featureSplit[1];
         var maxX = 0;
         var minX = 0;
         var xhttp0 = new XMLHttpRequest();
         xhttp0.onreadystatechange = async function () {
             if (this.readyState === 4 && this.status === 200) {
-                maxX = Math.max(this.response.get(firstFeature))
-                minX = Math.min(this.response.get(firstFeature))
+                maxX = Math.max(JSON.parse(this.response.get(firstFeature)))
+                minX = Math.min(JSON.parse(this.response.get(firstFeature)))
             }
         };
         xhttp0.open("POST", "/init/linear/dots", true);
@@ -171,14 +170,18 @@
 
                     const expression = expr;
                     //instead of the numbers need to put minimum value and maximum
-                    const xValues = math.range(0, 600, 0.5).toArray()
+                    const xValues = math.range(minX, maxX, 0.5).toArray()
                     const yValues = xValues.map(function (x) {
                         return expression.evaluate({x: x})
                     })
                     traceInit = {
                         x: xValues,
                         y: yValues,
-                        type: 'scatter'
+                        type: 'scatter',
+                        mode: 'marker',
+                        marker: {
+                            color: 'rgb(155,25,205)'
+                        }
                     }
                     var data = [trace1, traceInit];
                     Plotly.newPlot('myDiv', data, layout)
@@ -198,6 +201,21 @@
         var trace1;
         var traceInit;
         var layout;
+        var featureSplit = feature.split("-");
+        var firstFeature = featureSplit[0];
+        var secondFeature = featureSplit[1];
+        var maxX = 0;
+        var minX = 0;
+        var xhttp0 = new XMLHttpRequest();
+        xhttp0.onreadystatechange = async function () {
+            if (this.readyState === 4 && this.status === 200) {
+                maxX = Math.max(JSON.parse(this.response.get(firstFeature)));
+                minX = Math.min(JSON.parse(this.response.get(firstFeature)));
+            }
+        };
+        xhttp0.open("POST", "/init/linear/dots", true);
+        xhttp0.send();
+
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = async function () {
             if (this.readyState === 4 && this.status === 200) {
@@ -250,26 +268,23 @@
                     const expression = expr;
                     if (expression != null) {
                         //instead of the numbers need to put minimum value and maximum
-                        const xValues = math.range(0, 10, 0.5).toArray()
+                        const xValues = math.range(minX, maxX, 0.5).toArray()
                         const yValues = xValues.map(function (x) {
                             return expression.evaluate({x: x})
                         })
                         traceInit = {
                             x: xValues,
                             y: yValues,
-                            type: 'scatter'
+                            type: 'scatter',
+                            mode: 'marker',
+                            marker: {
+                                color: 'rgb(155,25,205)'
+                            }
                         }
                         var data = [trace1, traceInit];
                         Plotly.newPlot('myDiv', data, layout)
                     } else {
-                        // var trace1 = {
-                        //     x: [1.5, 3.5],
-                        //     y: [0.75, 2.5],
-                        //     text: ['Unfilled Circle', 'Filled Circle'],
-                        //     mode: 'text'
-                        // };
-
-                        var layout = {
+                        layout = {
                             title: 'Circles',
                             xaxis: {
                                 range: [xMinus-10, xPlus+10],
@@ -290,7 +305,7 @@
                                     x1: xPlus,
                                     y1: yPlus,
                                     line: {
-                                        color: 'rgba(50, 171, 96, 1)'
+                                        color: 'rgb(155,25,205)'
                                     }
                                 }
                             ]
