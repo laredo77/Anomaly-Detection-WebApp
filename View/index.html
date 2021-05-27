@@ -108,9 +108,10 @@
     }
 
     function resultLinear(feature) {
+        // find the features names
         var featureSplit = feature.split("-");
         var firstFeature = featureSplit[0];
-        var secondFeature = featureSplit[1];
+        // find min max for the linear reg line range
         var maxX = 0;
         var minX = 0;
         var xhttp0 = new XMLHttpRequest();
@@ -122,6 +123,7 @@
         };
         xhttp0.open("POST", "/init/linear/dots", true);
         xhttp0.send()
+        // finding anomalies for the graph
         var trace1;
         var traceInit;
         var layout;
@@ -153,6 +155,8 @@
         };
         xhttp.open("POST", "/detect/linear", true);
         xhttp.send()
+
+        // finding the linear reg line for the graph
         var xhttp2 = new XMLHttpRequest();
         xhttp2.onreadystatechange = async function () {
             if (this.readyState === 4 && this.status === 200) {
@@ -167,9 +171,7 @@
                             break;
                         }
                     }
-
                     const expression = expr;
-                    //instead of the numbers need to put minimum value and maximum
                     const xValues = math.range(minX, maxX, 0.5).toArray()
                     const yValues = xValues.map(function (x) {
                         return expression.evaluate({x: x})
@@ -204,6 +206,7 @@
         var featureSplit = feature.split("-");
         var firstFeature = featureSplit[0];
         var secondFeature = featureSplit[1];
+        // find min max for range
         var maxX = 0;
         var minX = 0;
         var xhttp0 = new XMLHttpRequest();
@@ -216,6 +219,7 @@
         xhttp0.open("POST", "/init/linear/dots", true);
         xhttp0.send();
 
+        // find anomalies for the graph
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = async function () {
             if (this.readyState === 4 && this.status === 200) {
@@ -243,6 +247,7 @@
         };
         xhttp.open("POST", "/detect/hybrid", true);
         xhttp.send()
+        // circles for the graph
         var xhttp2 = new XMLHttpRequest();
         xhttp2.onreadystatechange = async function () {
             if (this.readyState === 4 && this.status === 200) {

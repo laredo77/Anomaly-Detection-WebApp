@@ -48,7 +48,7 @@ app.post("/init/linear", (req, res) => {
     res.send(expressionString)
 })
 app.post("/init/linear/dots", (req, res) => {
-    res.send(...api.getMap("anomalyTrain.csv"))
+    res.send(api.getMap("anomalyTrain.csv"))
 })
 app.post("/init/hybrid", (req, res) => {
     const expressionString = api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv");
