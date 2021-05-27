@@ -114,15 +114,6 @@
         // find min max for the linear reg line range
         var maxX = 0;
         var minX = 0;
-        var xhttp0 = new XMLHttpRequest();
-        xhttp0.onreadystatechange = async function () {
-            if (this.readyState === 4 && this.status === 200) {
-                maxX = Math.max(JSON.parse(this.response.get(firstFeature)))
-                minX = Math.min(JSON.parse(this.response.get(firstFeature)))
-            }
-        };
-        xhttp0.open("POST", "/init/linear/dots", true);
-        xhttp0.send()
         // finding anomalies for the graph
         var trace1;
         var traceInit;
@@ -172,7 +163,7 @@
                         }
                     }
                     const expression = expr;
-                    const xValues = math.range(minX, maxX, 0.5).toArray()
+                    const xValues = math.range(0, 600, 0.5).toArray()
                     const yValues = xValues.map(function (x) {
                         return expression.evaluate({x: x})
                     })
@@ -209,16 +200,6 @@
         // find min max for range
         var maxX = 0;
         var minX = 0;
-        var xhttp0 = new XMLHttpRequest();
-        xhttp0.onreadystatechange = async function () {
-            if (this.readyState === 4 && this.status === 200) {
-                maxX = Math.max(JSON.parse(this.response.get(firstFeature)));
-                minX = Math.min(JSON.parse(this.response.get(firstFeature)));
-            }
-        };
-        xhttp0.open("POST", "/init/linear/dots", true);
-        xhttp0.send();
-
         // find anomalies for the graph
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = async function () {
@@ -273,7 +254,7 @@
                     const expression = expr;
                     if (expression != null) {
                         //instead of the numbers need to put minimum value and maximum
-                        const xValues = math.range(minX, maxX, 0.5).toArray()
+                        const xValues = math.range(0, 600, 0.5).toArray()
                         const yValues = xValues.map(function (x) {
                             return expression.evaluate({x: x})
                         })
