@@ -3,7 +3,8 @@ const fileUpload = require('express-fileupload')
 const path = require("path")
 const fs = require("fs")
 const api /*var name doesn't matter*/ = require('../build/Release/ExplanationAPI')
-
+var csv_train;
+var csv_detect;
 
 // cpp filesystem
 
@@ -21,8 +22,8 @@ app.post("/upload", (req, res) => {
     // res.write('searching for ' + req.body.key + ':\n')
 
     if (req.files) {
-        var csv_train = req.files.text_train
-        var csv_detect = req.files.text_detect
+        csv_train = req.files.text_train
+        csv_detect = req.files.text_detect
         // upload File physically and not through link (ZERO BYTES) like const fs = require('fs');
         var text = csv_detect.data.toString()
         fs.writeFileSync(csv_detect.name, text)
@@ -34,37 +35,37 @@ app.post("/upload", (req, res) => {
 
 })
 app.post("/detect/linear", (req, res) => {
-    const detect_linear_alg = api.detectLinearAlg("anomalyTrain.csv", "anomalyTest.csv");
+    const detect_linear_alg = api.detectLinearAlg(csv_train.name, csv_detect.name);
     res.send(detect_linear_alg)
 })
 app.post("/detect/hybrid", (req, res) => {
-    const detect_hybrid_alg = api.detectHybridAlg("anomalyTrain.csv", "anomalyTest.csv");
+    const detect_hybrid_alg = api.detectHybridAlg(csv_train.name, csv_detect.name);
     res.send(detect_hybrid_alg)
 })
 app.post("/init/linear", (req, res) => {
-    const expressionString = api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv");
+    const expressionString = api.initializeLinearGraphs(csv_train.name, csv_detect.name);
     res.send(expressionString)
 })
 app.post("/init/linear/dots", (req, res) => {
-    res.send(JSON.stringify([...api.getMap("anomalyTrain.csv")]));
+    res.send(JSON.stringify([...api.getMap(csv_train.name)]));
 })
 
 app.post("/init/hybrid/dots", (req, res) => {
-    res.send(JSON.stringify([...api.getMap("anomalyTrain.csv")]));
+    res.send(JSON.stringify([...api.getMap(csv_train.name)]));
 })
 
 app.post("/init/hybrid", (req, res) => {
-    const expressionString = api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv");
+    const expressionString = api.initializeHybridGraphs(csv_train.name, csv_detect.name);
     res.send(expressionString)
 })
 
 app.post("/features/linear", (req, res) => {
-    const get_features = api.getLinearFeatures("anomalyTrain.csv");
+    const get_features = api.getLinearFeatures(csv_train.name);
     res.send(get_features)
 })
 
 app.post("/features/hybrid", (req, res) => {
-    const get_features = api.getHybridFeatures("anomalyTrain.csv");
+    const get_features = api.getHybridFeatures(csv_train.name);
     res.send(get_features)
 })
 
