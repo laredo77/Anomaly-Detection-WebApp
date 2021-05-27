@@ -2,11 +2,9 @@ const express = require('express')
 const fileUpload = require('express-fileupload')
 const path = require("path")
 const fs = require("fs")
-const api /*var name doesn't matter*/ = require('../build/Release/ExplanationAPI')
+const api = require('../build/Release/API')
 var csv_train;
 var csv_detect;
-
-// cpp filesystem
 
 const app = express()
 // important for postman - user story 2
@@ -21,11 +19,6 @@ app.get("/", (req, res) => {
     res.sendFile("./index.html")
 })
 
-
-
-
-
-// user story 2 dont touch
 app.post("/upload", (req, res) => {
 
     if (req.files && req.body) {
@@ -52,7 +45,6 @@ app.post("/upload", (req, res) => {
     else res.sendStatus(400);
 })
 
-
 app.post("/detect", (req, res) => {
     if (req.files) {
         csv_train = req.files.text_train
@@ -62,7 +54,6 @@ app.post("/detect", (req, res) => {
         fs.writeFileSync(csv_detect.name, text)
         text = csv_train.data.toString()
         fs.writeFileSync(csv_train.name, text)
-        // everything is ok
         res.sendStatus(200);
     } else res.sendStatus(400);
 
@@ -71,14 +62,17 @@ app.post("/detect/linear", (req, res) => {
     const detect_linear_alg = api.detectLinearAlg(csv_train.name, csv_detect.name);
     res.send(detect_linear_alg)
 })
+
 app.post("/detect/hybrid", (req, res) => {
     const detect_hybrid_alg = api.detectHybridAlg(csv_train.name, csv_detect.name);
     res.send(detect_hybrid_alg)
 })
+
 app.post("/init/linear", (req, res) => {
     const expressionString = api.initializeLinearGraphs(csv_train.name, csv_detect.name);
     res.send(expressionString)
 })
+
 app.post("/init/linear/dots", (req, res) => {
     res.send(JSON.stringify([...api.getMap(csv_train.name)]));
 })
@@ -103,12 +97,3 @@ app.post("/features/hybrid", (req, res) => {
 })
 
 app.listen(8080)
-
-//
-// first run "node-gyp configure" and "node-gyp build" for the build and release folders to appear along with your api
-// after this is done, run "node main" to run this file. Every time you change the c++ run "node-gyp build" again,
-// and if you changed anything in the configurations like how many functions you want to use etc, run "node-gyp configure" again
-
-// then you can write this require. It will NOT autofill, but do it anyway.
-
-// example of printing what the c++ returns

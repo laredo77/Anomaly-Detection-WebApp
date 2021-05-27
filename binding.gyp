@@ -11,8 +11,8 @@
     ],
   "targets": [
     {
-      "target_name": "ExplanationAPI",
-      "sources": [ "./Model/cpp/ExplanationAPI.cpp" ] #file location
+      "target_name": "API",
+      "sources": [ "./Model/cpp/API.cpp" ] #file location
     }
   ]
 }

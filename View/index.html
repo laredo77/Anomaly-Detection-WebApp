@@ -9,17 +9,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://unpkg.com/mathjs@9.4.0/lib/browser/math.js"></script>
     <script src="https://cdn.plot.ly/plotly-1.35.2.min.js"></script>
-    <style>
-        #more {
-            display: none;
-        }
-    </style>
 </head>
 <body>
 <div class="bg">
     <div id="plot"></div>
     <div class="relative" id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
-    <!--not sure we need the next line -->
     <form method="post" action="/detect" enctype="multipart/form-data" onsubmit="return submitForm(this);">
         <table class="tableClass">
             <tr>
@@ -58,8 +52,6 @@
     <br>
 </div>
 <script>
-
-    // maoz part - dont touch
     function submitForm(oFormElement) {
         var xhr = new XMLHttpRequest();
         xhr.open(oFormElement.method, oFormElement.getAttribute("action"));
@@ -72,10 +64,6 @@
         xhr.send(new FormData(oFormElement));
         return false;
     }
-
-
-    // ofir part
-    // please organize/simplify i can't read that
     var isLinear = 0;
 
     function sendAlgo(algoName) {
@@ -155,7 +143,6 @@
 
         var xhttp3 = new XMLHttpRequest();
         xhttp3.onreadystatechange = async function () {
-            //const dataFromServer3 = new Map(JSON.parse(this.response));
             var map = new Map(JSON.parse(this.response));
             var points_x = map.get(firstFeature);
             var points_y = map.get(secondFeature);
@@ -180,9 +167,7 @@
                             break;
                         }
                     }
-
                     const expression = expr;
-                    //instead of the numbers need to put minimum value and maximum
                     const xValues = math.range(minX, maxX, 0.5).toArray()
                     const yValues = xValues.map(function (x) {
                         return expression.evaluate({x: x})
@@ -193,7 +178,6 @@
                         type: 'scatter'
                     }
                     var data = [trace1, traceInit, trace2];
-                    //var data = [trace1, traceInit];
                     Plotly.newPlot('myDiv', data, layout)
 
                 } catch (err) {
@@ -206,7 +190,6 @@
         xhttp2.send()
     }
 
-    // points of anomalies in Hybrid
     function resultHybrid(feature) {
         var featureSplit = feature.split("-");
         var firstFeature = featureSplit[0];
@@ -257,7 +240,6 @@
 
         var xhttp3 = new XMLHttpRequest();
         xhttp3.onreadystatechange = async function () {
-            //const dataFromServer3 = new Map(JSON.parse(this.response));
             var map = new Map(JSON.parse(this.response));
             var points_x = map.get(firstFeature);
             var points_y = map.get(secondFeature);
@@ -293,7 +275,6 @@
 
                     const expression = expr;
                     if (expression != null) {
-                        //instead of the numbers need to put minimum value and maximum
                         const xValues = math.range(minX, maxX, 0.5).toArray()
                         const yValues = xValues.map(function (x) {
                             return expression.evaluate({x: x})
@@ -306,13 +287,6 @@
                         var data = [trace1, traceInit, trace2];
                         Plotly.newPlot('myDiv', data, layout);
                     } else {
-                        // var trace1 = {
-                        //     x: [1.5, 3.5],
-                        //     y: [0.75, 2.5],
-                        //     text: ['Unfilled Circle', 'Filled Circle'],
-                        //     mode: 'text'
-                        // };
-
                         var layout = {
                             title: 'Circles',
                             xaxis: {
@@ -339,11 +313,9 @@
                                 }
                             ]
                         };
-
                         var data = [trace1, trace2];
                         Plotly.newPlot('myDiv', data, layout);
                     }
-
                 } catch (err) {
                     console.error(err)
                     alert(err)
@@ -371,7 +343,6 @@
     }
 
     function generateLinearFeatures() {
-        //document.getElementsByClassName('LinearReg').disabled = "disabled";
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = async function () {
             if (this.readyState === 4 && this.status === 200) {
@@ -385,7 +356,6 @@
                     document.getElementById("select").appendChild(option);
                 }
                 document.getElementById("container").appendChild(document.getElementById("select"));
-
             }
         };
         xhttp.open("POST", "/features/linear", true);
@@ -393,7 +363,6 @@
     }
 
     function generateHybridFeatures() {
-        //document.getElementsByClassName('LinearReg').disabled = "disabled";
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = async function () {
             if (this.readyState === 4 && this.status === 200) {
@@ -422,7 +391,6 @@
             text += "<li>" + "timeStep: " + timeStepArray[i] + "\t\t (" + xArray[i].toFixed(2) + "," + yArray[i].toFixed(2) + ")" + "</li>";
         }
         text += "</ul>";
-
         document.getElementById("demo").innerHTML = text;
     }
 </script>
