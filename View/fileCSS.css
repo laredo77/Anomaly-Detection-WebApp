@@ -53,6 +53,7 @@ body, html {
 }
 div.relative {
     position: fixed;
+    top: 100px;
     right:0px;
     height: 400px;
     width: 600px;
@@ -60,7 +61,7 @@ div.relative {
 div.Algo-menu{
     position: fixed;
     top: 400px;
-    left: 0px;
+    left: 10px;
 }
 
 .bg {
