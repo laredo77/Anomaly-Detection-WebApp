@@ -42,7 +42,7 @@ In addition, the user can upload new files whenever they wish and re-investegate
 >* Users can send HTTP Post request via any programming language. The request contains the algorithm they want to use and the contents of the csv files.
 The users will recive a JSON object containing the anomalies.
 
-You can also see our YouTube video at /!\ ADD YOUTUBE LINK /!\ in which we explain about the app.
+You can also see our YouTube video at https://www.youtube.com/watch?v=j63nNYKmACA in which we explain about the app.
 
 ### Dictionary
 Folders of the project 
@@ -50,7 +50,7 @@ Folders of the project
 > View  
 > Controller
 
-/!\ ADD URL PICTURE /!\
+![UML](https://user-images.githubusercontent.com/60240620/119880130-9ab9bb00-bf34-11eb-9d2a-669ff4130f1f.jpg)
 
 ### Technical explanation
 The web application was written in Node.js, JavaScript and HTML.
