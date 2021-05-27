@@ -9,6 +9,9 @@ var csv_detect;
 // cpp filesystem
 
 const app = express()
+// important for postman - user story 2
+app.use(express.json())
+// dont remove the above code
 app.use(express.urlencoded({
     extended: false
 }))
@@ -18,18 +21,48 @@ app.get("/", (req, res) => {
     res.sendFile("./index.html")
 })
 
-app.post("/upload", (req, res) => {
-    // res.write('searching for ' + req.body.key + ':\n')
 
+
+
+
+// user story 2 dont touch
+app.post("/upload", (req, res) => {
+
+    if (req.files && req.body) {
+        // create files
+        csv_train = req.files.train
+        csv_detect = req.files.detect
+        // upload File physically
+        var text = csv_detect.data.toString()
+        fs.writeFileSync(csv_detect.name, text)
+        text = csv_train.data.toString()
+        fs.writeFileSync(csv_train.name, text)
+
+        // calculate
+        if (req.body.hasOwnProperty('algo') && req.body.algo.includes("linear")) {
+            let detect_linear_alg = api.detectLinearAlg(csv_train.name, csv_detect.name);
+            res.send(JSON.stringify(detect_linear_alg))
+        }
+        else if (req.body.hasOwnProperty('algo') && req.body.algo.includes("hybrid")) {
+            let detect_hybrid_alg = api.detectHybridAlg(csv_train.name, csv_detect.name);
+            res.send(JSON.stringify(detect_hybrid_alg))
+        }
+        else  res.sendStatus(400);
+    }
+    else res.sendStatus(400);
+})
+
+
+app.post("/detect", (req, res) => {
     if (req.files) {
         csv_train = req.files.text_train
         csv_detect = req.files.text_detect
-        // upload File physically and not through link (ZERO BYTES) like const fs = require('fs');
+        // upload File physically
         var text = csv_detect.data.toString()
         fs.writeFileSync(csv_detect.name, text)
-
         text = csv_train.data.toString()
         fs.writeFileSync(csv_train.name, text)
+        // everything is ok
         res.sendStatus(200);
     } else res.sendStatus(400);
 

@@ -20,7 +20,7 @@
     <div id="plot"></div>
     <div class="relative" id='myDiv'><!-- Plotly chart will be drawn inside this DIV --></div>
     <!--not sure we need the next line -->
-    <form method="post" action="/upload" enctype="multipart/form-data" onsubmit="return submitForm(this);">
+    <form method="post" action="/detect" enctype="multipart/form-data" onsubmit="return submitForm(this);">
         <table class="tableClass">
             <tr>
                 <label class="WebsiteTitle">Welcome to Anomaly Detection WebServer Application</label>
@@ -63,19 +63,16 @@
     function submitForm(oFormElement) {
         var xhr = new XMLHttpRequest();
         xhr.open(oFormElement.method, oFormElement.getAttribute("action"));
-
-
         xhr.onload = function () {
             if (this.readyState === 4 && this.status === 200) {
                 showAlgoMenu();
                 cleanFeatureList();
             }
         };
-
-
         xhr.send(new FormData(oFormElement));
         return false;
     }
+
 
     // ofir part
     // please organize/simplify i can't read that
