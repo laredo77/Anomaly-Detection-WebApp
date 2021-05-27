@@ -22,6 +22,7 @@ struct correlatedFeatures {
     float x;
     float y;
     float radius;
+    vector<Point> correlated_points;
 };
 
 class SimpleAnomalyDetector:public TimeSeriesAnomalyDetector {
@@ -29,7 +30,7 @@ protected:
     vector<correlatedFeatures> cf;
     vector<AnomalyReport> v_ar;
     vector<Point> anomaly_points;
-    vector<Point> correlated_points;
+    //vector<Point> correlated_points;
 public:
     SimpleAnomalyDetector();
     virtual ~SimpleAnomalyDetector();
@@ -52,9 +53,9 @@ public:
         return anomaly_points;
     }
 
-    vector<Point> getCorrelatedPoints() {
-        return correlated_points;
-    }
+//    vector<Point> getCorrelatedPoints() {
+//        return correlated_points;
+//    }
 };
 
 #endif /* SIMPLEANOMALYDETECTOR_H_ */

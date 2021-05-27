@@ -34,17 +34,21 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
             if (correlation > 0.5) {
                 // Initialize Points array
                 Point *ps[data_s[time_series.get_features()[i]].size()];
+                // Initialize correlatedFeatures struct with data,
+                // and adding it to cf vector
+                correlatedFeatures cfs = {};
                 for (int k = 0; k < data_s[time_series.get_features()[i]].size(); k++) {
                     Point *p = new Point(data_s[time_series.get_features()[i]][k],
                     data_s[time_series.get_features()[j]][k]);
                     ps[k] = p;
-                    this->correlated_points.push_back(*p);
+                    //this->correlated_points.push_back(*p);
+                    cfs.correlated_points.push_back(*p);
                 }
                 // get linear reg
                 Line lin_reg = linear_reg(ps, data_s[time_series.get_features()[i]].size());
-                // Initialize correlatedFeatures struct with data,
-                // and adding it to cf vector
-                correlatedFeatures cfs = {};
+//                // Initialize correlatedFeatures struct with data,
+//                // and adding it to cf vector
+//                correlatedFeatures cfs = {};
                 cfs.x = 0;
                 cfs.y = 0;
                 cfs.radius = 0;
@@ -139,19 +143,23 @@ void SimpleAnomalyDetector::learnNormalLinear(const TimeSeries &ts) {
                     data_s[time_series.get_features()[i]].size()));
             // relevant correlation
             if (correlation > 0.9) {
+                // Initialize correlatedFeatures struct with data,
+                // and adding it to cf vector
+                correlatedFeatures cfs = {};
                 // Initialize Points array
                 Point *ps[data_s[time_series.get_features()[i]].size()];
                 for (int k = 0; k < data_s[time_series.get_features()[i]].size(); k++) {
                     Point *p = new Point(data_s[time_series.get_features()[i]][k],
                     data_s[time_series.get_features()[j]][k]);
                     ps[k] = p;
-                    this->correlated_points.push_back(*p);
+                    //this->correlated_points.push_back(*p);
+                    cfs.correlated_points.push_back(*p);
                 }
                 // get linear reg
                 Line lin_reg = linear_reg(ps, data_s[time_series.get_features()[i]].size());
-                // Initialize correlatedFeatures struct with data,
-                // and adding it to cf vector
-                correlatedFeatures cfs = {};
+//                // Initialize correlatedFeatures struct with data,
+//                // and adding it to cf vector
+//                correlatedFeatures cfs = {};
                     // calculate the max deviation
                 float max_dev = 0.0;
                 for (int l = 0; l < data_s[time_series.get_features()[i]].size(); l++) {

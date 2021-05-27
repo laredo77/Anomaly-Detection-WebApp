@@ -215,36 +215,6 @@
         args.GetReturnValue().Set(features);
     }
 
-//    void GetLinearPoints(const FunctionCallbackInfo<Value>&args) {
-//        Isolate* isolate = args.GetIsolate();
-//        string csvFileName = *v8::String::Utf8Value(args[0]);
-//        TimeSeries ts(csvFileName);
-//        HybridAnomalyDetector ad;
-//        ad.learnNormal(ts);
-//        vector<Point> cp=ad.getCorrelatedPoints();
-//
-//        // create javascript array of AnomalyReport
-//        Local<Array> reports = Array::New(isolate);
-//
-//        // create objects
-//        for (int i = 0; i < r.size() && i < anomaly_points.size(); i++) {
-//         Local<Object> report = Object::New(isolate);
-//         report->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate, r[i].description.c_str()));
-//         report->Set(String::NewFromUtf8(isolate, "timeStep"), Number::New(isolate, r[i].timeStep));
-//         Local<Object> point = Object::New(isolate);
-//         point->Set(String::NewFromUtf8(isolate, "x"), Number::New(isolate, anomaly_points[i].x));
-//         point->Set(String::NewFromUtf8(isolate, "y"), Number::New(isolate, anomaly_points[i].y));
-//         report->Set(String::NewFromUtf8(isolate, "Point"), point);
-//         reports->Set(i, report);
-//        }
-//        Local<Array> features = Array::New(isolate);
-//
-//        for (int i = 0; i < cf.size(); i++) {
-//            features->Set(i, String::NewFromUtf8(isolate, (cf[i].feature1+"-"+cf[i].feature2).c_str()));
-//        }
-//        args.GetReturnValue().Set(features);
-//    }
-
         void GetMap(const FunctionCallbackInfo<Value>&args) {
             Isolate* isolate = args.GetIsolate();
             string csvFileName = *v8::String::Utf8Value(args[0]);

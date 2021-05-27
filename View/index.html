@@ -108,14 +108,23 @@
     }
 
     function resultLinear(feature) {
-        // find the features names
         var featureSplit = feature.split("-");
         var firstFeature = featureSplit[0];
-        // find min max for the linear reg line range
+
+        var secondFeature = featureSplit[1];
         var maxX = 0;
         var minX = 0;
-        // finding anomalies for the graph
+        var xhttp0 = new XMLHttpRequest();
+        xhttp0.onreadystatechange = async function () {
+            var map = new Map(JSON.parse(this.response));
+            var points_x = map.get(firstFeature);
+            maxX = Math.max.apply(null, points_x);
+            minX = Math.min.apply(null, points_x);
+        };
+        xhttp0.open("POST", "/init/linear/dots", true);
+        xhttp0.send()
         var trace1;
+        var trace2;
         var traceInit;
         var layout;
         var xhttp = new XMLHttpRequest();
@@ -147,36 +156,47 @@
         xhttp.open("POST", "/detect/linear", true);
         xhttp.send()
 
-        // finding the linear reg line for the graph
+        var xhttp3 = new XMLHttpRequest();
+        xhttp3.onreadystatechange = async function () {
+            //const dataFromServer3 = new Map(JSON.parse(this.response));
+            var map = new Map(JSON.parse(this.response));
+            var points_x = map.get(firstFeature);
+            var points_y = map.get(secondFeature);
+            trace2 = {
+                x: points_x,
+                y: points_y,
+                mode: 'markers'
+            };
+        };
+        xhttp3.open("POST", "/init/linear/dots", true);
+        xhttp3.send()
+
         var xhttp2 = new XMLHttpRequest();
         xhttp2.onreadystatechange = async function () {
             if (this.readyState === 4 && this.status === 200) {
                 try {
-
                     var expr;
                     const dataFromServer2 = JSON.parse(this.response);
                     for (let i = 0; i < dataFromServer2.length; i++) {
                         if (dataFromServer2[i].point.description === feature) {
-                            //expressionsArray.push(dataFromServer2[i].expression);
                             expr = math.compile(dataFromServer2[i].point.expression);
                             break;
                         }
                     }
+
                     const expression = expr;
-                    const xValues = math.range(0, 600, 0.5).toArray()
+                    //instead of the numbers need to put minimum value and maximum
+                    const xValues = math.range(minX, maxX, 0.5).toArray()
                     const yValues = xValues.map(function (x) {
                         return expression.evaluate({x: x})
                     })
                     traceInit = {
                         x: xValues,
                         y: yValues,
-                        type: 'scatter',
-                        mode: 'marker',
-                        marker: {
-                            color: 'rgb(155,25,205)'
-                        }
+                        type: 'scatter'
                     }
-                    var data = [trace1, traceInit];
+                    var data = [trace1, traceInit, trace2];
+                    //var data = [trace1, traceInit];
                     Plotly.newPlot('myDiv', data, layout)
 
                 } catch (err) {
@@ -191,16 +211,25 @@
 
     // points of anomalies in Hybrid
     function resultHybrid(feature) {
-        var trace1;
-        var traceInit;
-        var layout;
         var featureSplit = feature.split("-");
         var firstFeature = featureSplit[0];
         var secondFeature = featureSplit[1];
-        // find min max for range
         var maxX = 0;
         var minX = 0;
-        // find anomalies for the graph
+        var xhttp0 = new XMLHttpRequest();
+        xhttp0.onreadystatechange = async function () {
+            var map = new Map(JSON.parse(this.response));
+            var points_x = map.get(firstFeature);
+            maxX = Math.max.apply(null, points_x);
+            minX = Math.min.apply(null, points_x);
+        };
+        xhttp0.open("POST", "/init/hybrid/dots", true);
+        xhttp0.send()
+
+        var trace1;
+        var trace2;
+        var traceInit;
+        var layout;
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = async function () {
             if (this.readyState === 4 && this.status === 200) {
@@ -228,7 +257,22 @@
         };
         xhttp.open("POST", "/detect/hybrid", true);
         xhttp.send()
-        // circles for the graph
+
+        var xhttp3 = new XMLHttpRequest();
+        xhttp3.onreadystatechange = async function () {
+            //const dataFromServer3 = new Map(JSON.parse(this.response));
+            var map = new Map(JSON.parse(this.response));
+            var points_x = map.get(firstFeature);
+            var points_y = map.get(secondFeature);
+            trace2 = {
+                x: points_x,
+                y: points_y,
+                mode: 'markers'
+            };
+        };
+        xhttp3.open("POST", "/init/hybrid/dots", true);
+        xhttp3.send()
+
         var xhttp2 = new XMLHttpRequest();
         xhttp2.onreadystatechange = async function () {
             if (this.readyState === 4 && this.status === 200) {
@@ -238,7 +282,6 @@
                     const dataFromServer2 = JSON.parse(this.response);
                     for (let i = 0; i < dataFromServer2.length; i++) {
                         if (dataFromServer2[i].point.description === feature) {
-                            //expressionsArray.push(dataFromServer2[i].expression);
                             if (dataFromServer2[i].type === 'line') {
                                 expr = math.compile(dataFromServer2[i].point.expression);
                                 break;
@@ -254,23 +297,26 @@
                     const expression = expr;
                     if (expression != null) {
                         //instead of the numbers need to put minimum value and maximum
-                        const xValues = math.range(0, 600, 0.5).toArray()
+                        const xValues = math.range(minX, maxX, 0.5).toArray()
                         const yValues = xValues.map(function (x) {
                             return expression.evaluate({x: x})
                         })
                         traceInit = {
                             x: xValues,
                             y: yValues,
-                            type: 'scatter',
-                            mode: 'marker',
-                            marker: {
-                                color: 'rgb(155,25,205)'
-                            }
+                            type: 'scatter'
                         }
-                        var data = [trace1, traceInit];
-                        Plotly.newPlot('myDiv', data, layout)
+                        var data = [trace1, traceInit, trace2];
+                        Plotly.newPlot('myDiv', data, layout);
                     } else {
-                        layout = {
+                        // var trace1 = {
+                        //     x: [1.5, 3.5],
+                        //     y: [0.75, 2.5],
+                        //     text: ['Unfilled Circle', 'Filled Circle'],
+                        //     mode: 'text'
+                        // };
+
+                        var layout = {
                             title: 'Circles',
                             xaxis: {
                                 range: [xMinus-10, xPlus+10],
@@ -291,14 +337,13 @@
                                     x1: xPlus,
                                     y1: yPlus,
                                     line: {
-                                        color: 'rgb(155,25,205)'
+                                        color: 'rgba(50, 171, 96, 1)'
                                     }
                                 }
                             ]
                         };
 
-                        var data = [trace1];
-
+                        var data = [trace1, trace2];
                         Plotly.newPlot('myDiv', data, layout);
                     }
 

@@ -30,8 +30,7 @@ app.post("/upload", (req, res) => {
         text = csv_train.data.toString()
         fs.writeFileSync(csv_train.name, text)
         res.sendStatus(200);
-    }
-    else res.sendStatus(400);
+    } else res.sendStatus(400);
 
 })
 app.post("/detect/linear", (req, res) => {
@@ -44,15 +43,18 @@ app.post("/detect/hybrid", (req, res) => {
 })
 app.post("/init/linear", (req, res) => {
     const expressionString = api.initializeLinearGraphs("anomalyTrain.csv", "anomalyTest.csv");
-    //console.log(expressionString);
     res.send(expressionString)
 })
 app.post("/init/linear/dots", (req, res) => {
-    res.send(api.getMap("anomalyTrain.csv"))
+    res.send(JSON.stringify([...api.getMap("anomalyTrain.csv")]));
 })
+
+app.post("/init/hybrid/dots", (req, res) => {
+    res.send(JSON.stringify([...api.getMap("anomalyTrain.csv")]));
+})
+
 app.post("/init/hybrid", (req, res) => {
     const expressionString = api.initializeHybridGraphs("anomalyTrain.csv", "anomalyTest.csv");
-    //console.log(expressionString);
     res.send(expressionString)
 })
 
