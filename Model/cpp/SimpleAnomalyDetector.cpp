@@ -41,14 +41,12 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
                     Point *p = new Point(data_s[time_series.get_features()[i]][k],
                     data_s[time_series.get_features()[j]][k]);
                     ps[k] = p;
-                    //this->correlated_points.push_back(*p);
                     cfs.correlated_points.push_back(*p);
                 }
                 // get linear reg
                 Line lin_reg = linear_reg(ps, data_s[time_series.get_features()[i]].size());
 //                // Initialize correlatedFeatures struct with data,
 //                // and adding it to cf vector
-//                correlatedFeatures cfs = {};
                 cfs.x = 0;
                 cfs.y = 0;
                 cfs.radius = 0;
@@ -113,7 +111,7 @@ vector<AnomalyReport> SimpleAnomalyDetector::detect(const TimeSeries &ts) {
             // is larger than the max deviation
             if (dev_p > cf[i].threshold) {
                 // if so, reported as anomaly!
-                string desc = cf[i].feature1 + "-" + cf[i].feature2;
+                string desc = cf[i].feature1 + "," + cf[i].feature2;
                 AnomalyReport aReport = AnomalyReport(desc, (k + 1));
                 this->v_ar.push_back(aReport);
 
@@ -152,14 +150,12 @@ void SimpleAnomalyDetector::learnNormalLinear(const TimeSeries &ts) {
                     Point *p = new Point(data_s[time_series.get_features()[i]][k],
                     data_s[time_series.get_features()[j]][k]);
                     ps[k] = p;
-                    //this->correlated_points.push_back(*p);
                     cfs.correlated_points.push_back(*p);
                 }
                 // get linear reg
                 Line lin_reg = linear_reg(ps, data_s[time_series.get_features()[i]].size());
 //                // Initialize correlatedFeatures struct with data,
 //                // and adding it to cf vector
-//                correlatedFeatures cfs = {};
                     // calculate the max deviation
                 float max_dev = 0.0;
                 for (int l = 0; l < data_s[time_series.get_features()[i]].size(); l++) {
@@ -202,7 +198,7 @@ vector<AnomalyReport> SimpleAnomalyDetector::detectLinear(const TimeSeries &ts) 
             // is larger than the max deviation
             if (dev_p > cf[i].threshold) {
                 // if so, reported as anomaly!
-                string desc = cf[i].feature1 + "-" + cf[i].feature2;
+                string desc = cf[i].feature1 + "," + cf[i].feature2;
                 AnomalyReport aReport = AnomalyReport(desc, (k + 1));
                 this->v_ar.push_back(aReport);
 

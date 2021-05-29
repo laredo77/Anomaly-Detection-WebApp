@@ -100,13 +100,11 @@ app.post("/init/hybrid", (req, res) => {
 
 app.post("/features/linear", (req, res) => {
     const get_features = api.getLinearFeatures(csv_train.name);
-    console.log(get_features);
     res.send(get_features)
 })
 
 app.post("/features/hybrid", (req, res) => {
     const get_features = api.getHybridFeatures(csv_train.name);
-    console.log(get_features);
     res.send(get_features)
 })
 

@@ -47,7 +47,7 @@
                 // create point
                 Local<Object> point = Object::New(isolate);
                 // set point
-                point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "-" + cf[i].feature2).c_str()));
+                point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "," + cf[i].feature2).c_str()));
                 if (std::stod(b) < 0)
                     point->Set(String::NewFromUtf8(isolate, "expression"), String::NewFromUtf8(isolate, (a+"*x"+b).c_str()));
                 else
@@ -61,7 +61,7 @@
                 // create point
                 Local<Object> point = Object::New(isolate);
                 // set point
-                point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "-" + cf[i].feature2).c_str()));
+                point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "," + cf[i].feature2).c_str()));
                 point->Set(String::NewFromUtf8(isolate, "xPlus"), Number::New(isolate, cf[i].x + cf[i].radius));
                 point->Set(String::NewFromUtf8(isolate, "yPlus"), Number::New(isolate, cf[i].y + cf[i].radius));
                 point->Set(String::NewFromUtf8(isolate, "xMinus"), Number::New(isolate, cf[i].x - cf[i].radius));
@@ -95,7 +95,7 @@
             // create point
             Local<Object> point = Object::New(isolate);
             // set point
-            point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "-" + cf[i].feature2).c_str()));
+            point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "," + cf[i].feature2).c_str()));
             if(std::stof(b) < 0)
                 point->Set(String::NewFromUtf8(isolate, "expression"), String::NewFromUtf8(isolate, (a+"*x"+b).c_str()));
             else
@@ -175,18 +175,12 @@
         HybridAnomalyDetector ad;
         ad.learnNormalLinear(ts);
         vector<correlatedFeatures> cf=ad.getNormalModel();
-        Local<Array> reports = Array::New(isolate);
+        Local<Array> features = Array::New(isolate);
 
         for (int i = 0; i < cf.size(); i++) {
-            Local<Object> feature = Object::New(isolate);
-            Local<Object> features = Object::New(isolate);
-            feature->Set(String::NewFromUtf8(isolate, "feature1"), String::NewFromUtf8(isolate, cf[i].feature1.c_str()));
-            feature->Set(String::NewFromUtf8(isolate, "feature2"), String::NewFromUtf8(isolate, cf[i].feature2.c_str()));
-            //features->Set(i, String::NewFromUtf8(isolate, (cf[i].feature1+"-"+cf[i].feature2).c_str()));
-            features->Set(String::NewFromUtf8(isolate, "Features"), feature);
-            reports->Set(i, features);
+            features->Set(i, String::NewFromUtf8(isolate, (cf[i].feature1+","+cf[i].feature2).c_str()));
         }
-        args.GetReturnValue().Set(reports);
+        args.GetReturnValue().Set(features);
     }
 
     void GetHybridFeatures(const FunctionCallbackInfo<Value>&args) {
@@ -200,7 +194,7 @@
         Local<Array> features = Array::New(isolate);
 
         for (int i = 0; i < cf.size(); i++) {
-            features->Set(i, String::NewFromUtf8(isolate, (cf[i].feature1+"-"+cf[i].feature2).c_str()));
+            features->Set(i, String::NewFromUtf8(isolate, (cf[i].feature1+","+cf[i].feature2).c_str()));
         }
         args.GetReturnValue().Set(features);
     }

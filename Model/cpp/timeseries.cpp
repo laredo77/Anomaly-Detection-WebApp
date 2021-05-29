@@ -28,14 +28,18 @@ map<std::string, vector<float>> TimeSeries::set_data_structure(const char *fileN
     fin.open(fileName, ios::in); // open an existing file
     std::string line, line2;
     // Adding features as key and initialize vector as value
+    int index = 1;
     for (int i = 0; i < 1; i++) {
         std::getline(fin, line);
         std::stringstream ss(line);
 
         while (getline(ss, line2, ',')) {
+            line2 += "_";
+            line2 += to_string(index);
             features.push_back(line2);
             std::vector<float> v;
             data_s.insert({line2, v});
+            index++;
         }
     }
     // Adding values to each vector

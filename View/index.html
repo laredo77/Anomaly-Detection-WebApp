@@ -94,15 +94,9 @@
     }
 
     function resultLinear(feature) {
-        alert(feature.Features.feature1);
-        alert(features[0]);
-        var firstFeature = "";
-        var secondFeature = "";
-        // var featureSplit = feature.split(",");
-        // var firstFeature = featureSplit[0];
-        // var secondFeature = featureSplit[1];
-        // var firstFeature = feature.feature1;
-        // var secondFeature = feature.feature2;
+        var featureSplit = feature.split(",");
+        var firstFeature = featureSplit[0];
+        var secondFeature = featureSplit[1];
 
         var maxX = 0;
         var minX = 0;
@@ -198,7 +192,7 @@
     }
 
     function resultHybrid(feature) {
-        var featureSplit = feature.split("-");
+        var featureSplit = feature.split(",");
         var firstFeature = featureSplit[0];
         var secondFeature = featureSplit[1];
         var maxX = 0;
@@ -357,22 +351,11 @@
                 var values = JSON.parse(this.response);
                 for (const val of values) {
                     var option = document.createElement("option");
-                    option.id = val.Features;
-                    // let arr = [];
-                    // arr.push(val.Features.feature1);
-                    // arr.push(val.Features.feature2);
+                    option.id = val;
                     option.value = val;
-                    option.text = val.Features.feature1 + "-" + val.Features.feature2;
+                    option.text = val;
                     document.getElementById("select").appendChild(option);
                 }
-                //for (let i = 0; i < values.length; i++) {
-                //    alert(values[i].Features.feature1);
-                    // var option = document.createElement("option");
-                    // option.id = values[i].Features;
-                    // option[0].value = values[i].Features.feature1;
-                    // option[1].value = values[i].Features.feature1;
-
-                //}
                 document.getElementById("container").appendChild(document.getElementById("select"));
             }
         };
