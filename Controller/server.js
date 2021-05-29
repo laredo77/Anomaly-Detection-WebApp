@@ -21,21 +21,21 @@ app.get("/", (req, res) => {
 
 app.post("/upload", (req, res) => {
     // protection - don't remove it - maoz
-    const fileSchema = Joi.object().keys({
-        train: Joi.required(),
-        detect: Joi.required(),
-    });
-    const bodySchema = Joi.object().keys({
-        algo: Joi.string().required()
-    });
-    const body_result = bodySchema.validate(req.body);
-    const files_result = fileSchema.validate(req.files);
-    const body_valid = (typeof body_result.error === 'undefined')
-    const files_valid = (typeof files_result.error === 'undefined')
+    // const fileSchema = Joi.object().keys({
+    //     train: Joi.required(),
+    //     detect: Joi.required(),
+    // });
+    // const bodySchema = Joi.object().keys({
+    //     algo: Joi.string().required()
+    // });
+    // const body_result = bodySchema.validate(req.body);
+    // const files_result = fileSchema.validate(req.files);
+    // const body_valid = (typeof body_result.error === 'undefined')
+    // const files_valid = (typeof files_result.error === 'undefined')
 
     // the code validate the files ( empty or wrong properties )
 
-    if (files_valid && body_valid) {
+ //   if (files_valid && body_valid) {
         // create files
         csv_train = req.files.train
         csv_detect = req.files.detect
@@ -52,8 +52,8 @@ app.post("/upload", (req, res) => {
         } else if (req.body.algo.includes("hybrid")) {
             let detect_hybrid_alg = api.detectHybridAlg(csv_train.name, csv_detect.name);
             res.send(JSON.stringify(detect_hybrid_alg))
-        } else res.sendStatus(400);
-    }
+        } //else res.sendStatus(400);
+ //   }
     else res.sendStatus(400);
 })
 

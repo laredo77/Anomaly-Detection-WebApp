@@ -37,7 +37,7 @@
         Local<Array> points = Array::New(isolate);
 
         for (int i = 0; i < cf.size(); i++) {
-            if (cf[i].corrlation > 0.9) {
+            if (isfinite(cf[i].corrlation) && cf[i].corrlation > 0.9) {
                 Local<Object> correlated_point = Object::New(isolate);
                 // create a and b
                 string a(to_string(cf[i].lin_reg.a));
@@ -55,7 +55,8 @@
                 correlated_point->Set(String::NewFromUtf8(isolate, "point"), point);
                 points->Set(i, correlated_point);
             }
-            else if (cf[i].corrlation > 0.5) {
+            else if (isfinite(cf[i].corrlation) && cf[i].corrlation > 0.5) {
+                if (isfinite(cf[i].x) && isfinite(cf[i].y) && isfinite(cf[i].radius)) {
                 Local<Object> correlated_point = Object::New(isolate);
                 correlated_point->Set(String::NewFromUtf8(isolate, "type"), String::NewFromUtf8(isolate, "circle"));
                 // create point
@@ -69,6 +70,7 @@
                 // create point with data
                 correlated_point->Set(String::NewFromUtf8(isolate, "point"), point);
                 points->Set(i, correlated_point);
+                }
             }
         }
         args.GetReturnValue().Set(points);
@@ -125,14 +127,16 @@
 
         // create objects
         for (int i = 0; i < r.size() && i < anomaly_points.size(); i++) {
-         Local<Object> report = Object::New(isolate);
-         report->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate, r[i].description.c_str()));
-         report->Set(String::NewFromUtf8(isolate, "timeStep"), Number::New(isolate, r[i].timeStep));
-         Local<Object> point = Object::New(isolate);
-         point->Set(String::NewFromUtf8(isolate, "x"), Number::New(isolate, anomaly_points[i].x));
-         point->Set(String::NewFromUtf8(isolate, "y"), Number::New(isolate, anomaly_points[i].y));
-         report->Set(String::NewFromUtf8(isolate, "Point"), point);
-         reports->Set(i, report);
+            if(isfinite(anomaly_points[i].x) && isfinite(anomaly_points[i].y) && isfinite(r[i].timeStep)) {
+                Local<Object> report = Object::New(isolate);
+                report->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate, r[i].description.c_str()));
+                report->Set(String::NewFromUtf8(isolate, "timeStep"), Number::New(isolate, r[i].timeStep));
+                Local<Object> point = Object::New(isolate);
+                point->Set(String::NewFromUtf8(isolate, "x"), Number::New(isolate, anomaly_points[i].x));
+                point->Set(String::NewFromUtf8(isolate, "y"), Number::New(isolate, anomaly_points[i].y));
+                report->Set(String::NewFromUtf8(isolate, "Point"), point);
+                reports->Set(i, report);
+            }
         }
 
         args.GetReturnValue().Set(reports);
@@ -156,6 +160,7 @@
 
         // create objects
         for (int i = 0; i < r.size() && i < anomaly_points.size(); i++) {
+            if(isfinite(anomaly_points[i].x) && isfinite(anomaly_points[i].y) && isfinite(r[i].timeStep)) {
             Local<Object> report = Object::New(isolate);
             report->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate, r[i].description.c_str()));
             report->Set(String::NewFromUtf8(isolate, "timeStep"), Number::New(isolate, r[i].timeStep));
@@ -164,6 +169,7 @@
             point->Set(String::NewFromUtf8(isolate, "y"), Number::New(isolate, anomaly_points[i].y));
             report->Set(String::NewFromUtf8(isolate, "Point"), point);
             reports->Set(i, report);
+            }
         }
         args.GetReturnValue().Set(reports);
     }
@@ -212,8 +218,11 @@
             // create array
             Local<Array> array_js = Array::New(isolate);
             // from vector
+
             for (int i = 0; i < value.second.size(); i++) {
-                array_js->Set(i, Number::New(isolate, value.second[i]));
+                if (isfinite(value.second[i])) {
+                    array_js->Set(i, Number::New(isolate, value.second[i]));
+                }
             }
             // add value to javascript map
             map_js->Set(isolate->GetCurrentContext(), String::NewFromUtf8(isolate,value.first.c_str()), array_js);
@@ -234,5 +243,3 @@
     }
     NODE_MODULE(NODE_GYP_MODULE_NAME, Initialize); // this needs to be at the end, don't touch
  }
-
-

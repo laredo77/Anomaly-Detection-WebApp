@@ -65,6 +65,7 @@
         xhr.send(new FormData(oFormElement));
         return false;
     }
+
     var isLinear = 0;
 
     function sendAlgo(algoName) {
@@ -72,18 +73,15 @@
         xhttp.open("POST", "/detect", true);
         xhttp.send(algoName)
     }
-
     function cleanFeatureList() {
         document.getElementById("select").options.length = 0;
     }
-
     function setIsLinear(value) {
         if (value == 0) {
             isLinear = 0;
         } else
             isLinear = 1;
     }
-
     function resultOfSelectedFeature() {
         var feature = document.getElementById("select").value;
         if (isLinear == 0) {
@@ -92,12 +90,10 @@
             resultLinear(feature);
         }
     }
-
     function resultLinear(feature) {
         var featureSplit = feature.split(",");
         var firstFeature = featureSplit[0];
         var secondFeature = featureSplit[1];
-
         var maxX = 0;
         var minX = 0;
         var xhttp0 = new XMLHttpRequest();
@@ -130,7 +126,6 @@
                         yArray.push(dataFromServer[i].Point.y);
                     }
                 }
-
                 trace1 = {
                     x: xArray,
                     y: yArray,
@@ -155,7 +150,6 @@
         };
         xhttp3.open("POST", "/init/linear/dots", true);
         xhttp3.send()
-
         var xhttp2 = new XMLHttpRequest();
         xhttp2.onreadystatechange = async function () {
             if (this.readyState === 4 && this.status === 200) {
@@ -168,6 +162,7 @@
                             break;
                         }
                     }
+
                     const expression = expr;
                     const xValues = math.range(minX, maxX, 0.5).toArray()
                     const yValues = xValues.map(function (x) {
@@ -201,12 +196,16 @@
         xhttp0.onreadystatechange = async function () {
             var map = new Map(JSON.parse(this.response));
             var points_x = map.get(firstFeature);
-            maxX = Math.max.apply(null, points_x);
-            minX = Math.min.apply(null, points_x);
+            try {
+                maxX = Math.max.apply(null, points_x);
+                minX = Math.min.apply(null, points_x);
+            } catch (err) {
+                console.error(err)
+                alert(err)
+            }
         };
         xhttp0.open("POST", "/init/hybrid/dots", true);
         xhttp0.send()
-
         var trace1;
         var trace2;
         var traceInit;
@@ -223,9 +222,13 @@
                 const dataFromServer = JSON.parse(this.response);
                 for (let i = 0; i < dataFromServer.length; i++) {
                     if (dataFromServer[i].description === feature) {
-                        timeStepArray.push(dataFromServer[i].timeStep);
-                        xArray.push(dataFromServer[i].Point.x);
-                        yArray.push(dataFromServer[i].Point.y);
+                        if (Number.isFinite(dataFromServer[i].timeStep)) {
+                            timeStepArray.push(dataFromServer[i].timeStep);
+                        }
+                        if (Number.isFinite(dataFromServer[i].Point.x) && Number.isFinite(dataFromServer[i].Point.y)) {
+                            xArray.push(dataFromServer[i].Point.x);
+                            yArray.push(dataFromServer[i].Point.y);
+                        }
                     }
                 }
                 trace1 = {
@@ -244,15 +247,23 @@
             var map = new Map(JSON.parse(this.response));
             var points_x = map.get(firstFeature);
             var points_y = map.get(secondFeature);
-            trace2 = {
-                x: points_x,
-                y: points_y,
-                mode: 'markers'
-            };
+            var nan_flag = 0;
+            for (let i = 0; i < points_x.length; i++) {
+                if (!Number.isFinite(points_x[i]) || !Number.isFinite(points_y[i])) {
+                    nan_flag = 1;
+                    break;
+                }
+            }
+            if (nan_flag === 0) {
+                trace2 = {
+                    x: points_x,
+                    y: points_y,
+                    mode: 'markers'
+                };
+            }
         };
         xhttp3.open("POST", "/init/hybrid/dots", true);
         xhttp3.send()
-
         var xhttp2 = new XMLHttpRequest();
         xhttp2.onreadystatechange = async function () {
             if (this.readyState === 4 && this.status === 200) {
@@ -276,7 +287,11 @@
 
                     const expression = expr;
                     if (expression != null) {
-                        const xValues = math.range(minX, maxX, 0.5).toArray()
+                        if (Number.isFinite(minX) && Number.isFinite(maxX)) {
+                            const xValues = math.range(minX, maxX, 0.5).toArray()
+                        } else {
+                            const xValues = math.range(0, 600, 0.5).toArray()
+                        }
                         const yValues = xValues.map(function (x) {
                             return expression.evaluate({x: x})
                         })
@@ -288,35 +303,38 @@
                         var data = [trace1, traceInit, trace2];
                         Plotly.newPlot('myDiv', data, layout);
                     } else {
-                        var layout = {
-                            title: 'Circles',
-                            xaxis: {
-                                range: [xMinus-10, xPlus+10],
-                                zeroline: false
-                            },
-                            yaxis: {
-                                range: [yMinus-10, yPlus+10]
-                            },
-                            width: 500,
-                            height: 500,
-                            shapes: [
-                                {
-                                    type: 'circle',
-                                    xref: 'x',
-                                    yref: 'y',
-                                    x0: xMinus,
-                                    y0: yMinus,
-                                    x1: xPlus,
-                                    y1: yPlus,
-                                    line: {
-                                        color: 'rgba(50, 171, 96, 1)'
+                        if (Number.isFinite(xMinus) && Number.isFinite(xPlus) && Number.isFinite(yMinus) && Number.isFinite(yPlus)) {
+                            var layout = {
+                                title: 'Circles',
+                                xaxis: {
+                                    range: [xMinus - 10, xPlus + 10],
+                                    zeroline: false
+                                },
+                                yaxis: {
+                                    range: [yMinus - 10, yPlus + 10]
+                                },
+                                width: 500,
+                                height: 500,
+                                shapes: [
+                                    {
+                                        type: 'circle',
+                                        xref: 'x',
+                                        yref: 'y',
+                                        x0: xMinus,
+                                        y0: yMinus,
+                                        x1: xPlus,
+                                        y1: yPlus,
+                                        line: {
+                                            color: 'rgba(50, 171, 96, 1)'
+                                        }
                                     }
-                                }
-                            ]
-                        };
+                                ]
+                            };
+                        }
                         var data = [trace1, trace2];
                         Plotly.newPlot('myDiv', data, layout);
                     }
+
                 } catch (err) {
                     console.error(err)
                     alert(err)
@@ -326,24 +344,22 @@
         xhttp2.open("POST", "/init/hybrid", true);
         xhttp2.send()
     }
-
     function disableAlgoMenu() {
         // disappear the algo menu after choosing algo
         var x = document.getElementById("Algo-menu");
         x.style.display = "none"; // if want to return the menu instead of none write "block"
     }
-
     function choseAlgo(algoName) {
         // printing the chosen algo into a label
         document.getElementById("algoNameLabel").innerHTML = algoName;
     }
-
     function showAlgoMenu() {
         var x = document.getElementById("Algo-menu");
         x.style.display = "block"; // if want to return the menu instead of none write "block"
     }
 
     function generateLinearFeatures() {
+
         var xhttp = new XMLHttpRequest();
         xhttp.onreadystatechange = async function () {
             if (this.readyState === 4 && this.status === 200) {
@@ -357,6 +373,7 @@
                     document.getElementById("select").appendChild(option);
                 }
                 document.getElementById("container").appendChild(document.getElementById("select"));
+
             }
         };
         xhttp.open("POST", "/features/linear", true);
@@ -377,24 +394,22 @@
                     document.getElementById("select").appendChild(option);
                 }
                 document.getElementById("container").appendChild(document.getElementById("select"));
-
             }
         };
         xhttp.open("POST", "/features/hybrid", true);
         xhttp.send()
     }
-
     function myFunction(timeStepArray, xArray, yArray) {
         var text, i;
-
         text = "<ul>";
         for (i = 0; i < timeStepArray.length; i++) {
-            text += "<li>" + "timeStep: " + timeStepArray[i] + "\t\t (" + xArray[i].toFixed(2) + "," + yArray[i].toFixed(2) + ")" + "</li>";
+            if (Number.isFinite(xArray[i]) && Number.isFinite(yArray[i]))
+                text += "<li>" + "timeStep: " + timeStepArray[i] + "\t\t (" + xArray[i].toFixed(2) + "," + yArray[i].toFixed(2) + ")" + "</li>";
         }
         text += "</ul>";
+
         document.getElementById("demo").innerHTML = text;
     }
 </script>
 </body>
 </html>
-
