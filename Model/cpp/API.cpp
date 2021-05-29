@@ -175,12 +175,18 @@
         HybridAnomalyDetector ad;
         ad.learnNormalLinear(ts);
         vector<correlatedFeatures> cf=ad.getNormalModel();
-        Local<Array> features = Array::New(isolate);
+        Local<Array> reports = Array::New(isolate);
 
         for (int i = 0; i < cf.size(); i++) {
-            features->Set(i, String::NewFromUtf8(isolate, (cf[i].feature1+"-"+cf[i].feature2).c_str()));
+            Local<Object> feature = Object::New(isolate);
+            Local<Object> features = Object::New(isolate);
+            feature->Set(String::NewFromUtf8(isolate, "feature1"), String::NewFromUtf8(isolate, cf[i].feature1.c_str()));
+            feature->Set(String::NewFromUtf8(isolate, "feature2"), String::NewFromUtf8(isolate, cf[i].feature2.c_str()));
+            //features->Set(i, String::NewFromUtf8(isolate, (cf[i].feature1+"-"+cf[i].feature2).c_str()));
+            features->Set(String::NewFromUtf8(isolate, "Features"), feature);
+            reports->Set(i, features);
         }
-        args.GetReturnValue().Set(features);
+        args.GetReturnValue().Set(reports);
     }
 
     void GetHybridFeatures(const FunctionCallbackInfo<Value>&args) {

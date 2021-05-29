@@ -308,8 +308,8 @@ ifeq ($(strip $(foreach prefix,$(NO_LOAD),\
 endif
 
 quiet_cmd_regen_makefile = ACTION Regenerating $@
-cmd_regen_makefile = cd $(srcdir); /usr/share/nodejs/node-gyp/gyp/gyp_main.py -fmake --ignore-environment "--toplevel-dir=." -I/mnt/c/Users/lared/Desktop/d3/build/config.gypi -I/usr/share/nodejs/node-gyp/addon.gypi -I/usr/include/nodejs/common.gypi "--depth=." "-Goutput_dir=." "--generator-output=build" "-Dlibrary=shared_library" "-Dvisibility=default" "-Dnode_root_dir=/usr/include/nodejs" "-Dnode_gyp_dir=/usr/share/nodejs/node-gyp" "-Dnode_lib_file=/usr/include/nodejs/<(target_arch)/node.lib" "-Dmodule_root_dir=/mnt/c/Users/lared/Desktop/d3" "-Dnode_engine=v8" binding.gyp
-Makefile: $(srcdir)/../../../../../../usr/share/nodejs/node-gyp/addon.gypi $(srcdir)/../../../../../../usr/include/nodejs/common.gypi $(srcdir)/build/config.gypi $(srcdir)/binding.gyp
+cmd_regen_makefile = cd $(srcdir); /usr/share/nodejs/node-gyp/gyp/gyp_main.py -fmake --ignore-environment "--toplevel-dir=." "-I/mnt/c/Users/lared/Desktop/Projects/Advance Programing 2/WebApp/build/config.gypi" -I/usr/share/nodejs/node-gyp/addon.gypi -I/usr/include/nodejs/common.gypi "--depth=." "-Goutput_dir=." "--generator-output=build" "-Dlibrary=shared_library" "-Dvisibility=default" "-Dnode_root_dir=/usr/include/nodejs" "-Dnode_gyp_dir=/usr/share/nodejs/node-gyp" "-Dnode_lib_file=/usr/include/nodejs/<(target_arch)/node.lib" "-Dmodule_root_dir=/mnt/c/Users/lared/Desktop/Projects/Advance Programing 2/WebApp" "-Dnode_engine=v8" binding.gyp
+Makefile: $(srcdir)/../../../../../../../../usr/share/nodejs/node-gyp/addon.gypi $(srcdir)/build/config.gypi $(srcdir)/binding.gyp $(srcdir)/../../../../../../../../usr/include/nodejs/common.gypi
 	$(call do_cmd,regen_makefile)
 
 # "all" is a concatenation of the "all" targets from all the included
