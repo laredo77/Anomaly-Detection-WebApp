@@ -23,7 +23,7 @@ Then you are able to run the command `node ./Controller/server.js` in order to r
 
 Run the program and use your favorite browser. Connect to the URL: http://localhost:8080/
 Using the dedicated button, upload the csv file with the fligth data to the server to have the algorithm learn the normal state.
-Using the dedicated button, upload the csv file with the fligth data to the server that may contain anomalies in order to be investigated by the algorithm.
+Using the dedicated button, upload the csv file with the fligth data to the server that may contain anomalies in order to be investigated by the algorithm. Press Submit.
 Choose an algorithm to detect anomalies from the following:
 >* Linear Regression-Based Investigation Algorithm: This algorithm studies the data of a normal flight and reports correlating features. For each pair of correlated features, the algorithm creates a linear equation using a linear regression method which is calculated by all the points that make up the features. The algorithm calculates the distance of the furthest point from the regression line and defines this distance as a threshold distance. 
 Then, the algorithm checks each pair of features in the investegated flight data for all the points that were created by the correlated features. If there is a point where the distance from the regression line is greater than the threshold distance, the algorithm reports this point as an anomaly.
@@ -31,7 +31,7 @@ Then, the algorithm checks each pair of features in the investegated flight data
 This algorithm learns all the points of a pair of features and produces a minimum circle that contains all the points together. 
 The algorithm calculates the distance of the furthest point from the center point and defines this distance as a threshold distance (This is the radius because necessarily this point sits on the equation of the circle). Then, the algorithm checks each pair of features in the investegated flight data for all the points the correlated features create. If there is a point with greater distance from the center than the distance of the threshold - it means, it is outside of the mimimum circle and the algorithm reports this point as an anomaly.
 
-Press Submit.
+**Every time you want to choose an algorithm you must first upload files and then press the submit button.**
 
 Now, a dedicated graph will open for the user showing the data and the anomalies.
 The investigator can select the features that were received as correlating from the list of features. Each pair of features will display their own graph and their deviation points according to the chosen algorithm detected. As well as a list of deviations by times.
