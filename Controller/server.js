@@ -52,9 +52,9 @@ app.post("/upload", (req, res) => {
         } else if (req.body.algo.includes("hybrid")) {
             let detect_hybrid_alg = api.detectHybridAlg(csv_train.name, csv_detect.name);
             res.send(JSON.stringify(detect_hybrid_alg))
-        } //else res.sendStatus(400);
+        } else res.sendStatus(400);
  //   }
-    else res.sendStatus(400);
+    //else res.sendStatus(400);
 })
 
 app.post("/detect", (req, res) => {

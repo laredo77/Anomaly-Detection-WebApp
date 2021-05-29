@@ -287,11 +287,7 @@
 
                     const expression = expr;
                     if (expression != null) {
-                        if (Number.isFinite(minX) && Number.isFinite(maxX)) {
-                            const xValues = math.range(minX, maxX, 0.5).toArray()
-                        } else {
-                            const xValues = math.range(0, 600, 0.5).toArray()
-                        }
+                        const xValues = math.range(minX, maxX, 0.5).toArray()
                         const yValues = xValues.map(function (x) {
                             return expression.evaluate({x: x})
                         })

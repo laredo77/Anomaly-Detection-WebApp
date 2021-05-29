@@ -21,7 +21,6 @@ SimpleAnomalyDetector::~SimpleAnomalyDetector() {
 void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
     TimeSeries time_series = ts;
     map<std::string, vector<float>> data_s = time_series.get_data_structure();
-
     // Checks all the correlation combinations
     for (int i = 0; i < data_s.size() - 1; i++) {
         for (int j = i + 1; j < data_s.size(); j++) {
@@ -31,7 +30,7 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
                     &data_s[time_series.get_features()[j]][0],
                     data_s[time_series.get_features()[i]].size()));
             // relevant correlation
-            if (isfinite(correlation) && correlation > 0.5) {
+            if (correlation > 0.75) {
                 // Initialize Points array
                 Point *ps[data_s[time_series.get_features()[i]].size()];
                 // Initialize correlatedFeatures struct with data,
@@ -61,8 +60,8 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
                     }
                     cfs.threshold = max_dev * 1.1;
                     // otherwise correlations higher than 0.5
+                //}
                 } else {
-
                     // get minimal circle
                     Circle c = findMinCircle(ps, data_s[time_series.get_features()[i]].size());
                     cfs.threshold = c.radius * 1.1;
