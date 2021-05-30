@@ -42,6 +42,8 @@
                 // create a and b
                 string a(to_string(cf[i].lin_reg.a));
                 string b(to_string(cf[i].lin_reg.b));
+                if (!isfinite(std::stod(a)) || !isfinite(std::stod(b)))
+                    break;
                 // type
                 correlated_point->Set(String::NewFromUtf8(isolate, "type"), String::NewFromUtf8(isolate, "line"));
                 // create point
@@ -57,19 +59,19 @@
             }
             else if (isfinite(cf[i].corrlation) && cf[i].corrlation > 0.5) {
                 if (isfinite(cf[i].x) && isfinite(cf[i].y) && isfinite(cf[i].radius)) {
-                Local<Object> correlated_point = Object::New(isolate);
-                correlated_point->Set(String::NewFromUtf8(isolate, "type"), String::NewFromUtf8(isolate, "circle"));
-                // create point
-                Local<Object> point = Object::New(isolate);
-                // set point
-                point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "," + cf[i].feature2).c_str()));
-                point->Set(String::NewFromUtf8(isolate, "xPlus"), Number::New(isolate, cf[i].x + cf[i].radius));
-                point->Set(String::NewFromUtf8(isolate, "yPlus"), Number::New(isolate, cf[i].y + cf[i].radius));
-                point->Set(String::NewFromUtf8(isolate, "xMinus"), Number::New(isolate, cf[i].x - cf[i].radius));
-                point->Set(String::NewFromUtf8(isolate, "yMinus"), Number::New(isolate, cf[i].y - cf[i].radius));
-                // create point with data
-                correlated_point->Set(String::NewFromUtf8(isolate, "point"), point);
-                points->Set(i, correlated_point);
+                    Local<Object> correlated_point = Object::New(isolate);
+                    correlated_point->Set(String::NewFromUtf8(isolate, "type"), String::NewFromUtf8(isolate, "circle"));
+                    // create point
+                    Local<Object> point = Object::New(isolate);
+                    // set point
+                    point->Set(String::NewFromUtf8(isolate, "description"), String::NewFromUtf8(isolate,(cf[i].feature1 + "," + cf[i].feature2).c_str()));
+                    point->Set(String::NewFromUtf8(isolate, "xPlus"), Number::New(isolate, cf[i].x + cf[i].radius));
+                    point->Set(String::NewFromUtf8(isolate, "yPlus"), Number::New(isolate, cf[i].y + cf[i].radius));
+                    point->Set(String::NewFromUtf8(isolate, "xMinus"), Number::New(isolate, cf[i].x - cf[i].radius));
+                    point->Set(String::NewFromUtf8(isolate, "yMinus"), Number::New(isolate, cf[i].y - cf[i].radius));
+                    // create point with data
+                    correlated_point->Set(String::NewFromUtf8(isolate, "point"), point);
+                    points->Set(i, correlated_point);
                 }
             }
         }
@@ -92,6 +94,8 @@
             // create a and b
             string a(to_string(cf[i].lin_reg.a));
             string b(to_string(cf[i].lin_reg.b));
+            if (!isfinite(std::stod(a)) || !isfinite(std::stod(b)))
+                break;
             // type
             correlated_point->Set(String::NewFromUtf8(isolate, "type"), String::NewFromUtf8(isolate, "line"));
             // create point

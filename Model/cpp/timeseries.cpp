@@ -19,6 +19,7 @@ void TimeSeries::add_new_line(const char *fileName, string newLine) {
     fout << newLine << endl;
     fout.close();
 }
+
 // Set data structure as a map.
 // The keys hold the features and the elements is vector of float numbers
 map<std::string, vector<float>> TimeSeries::set_data_structure(const char *fileName) {
@@ -47,8 +48,15 @@ map<std::string, vector<float>> TimeSeries::set_data_structure(const char *fileN
         int i = 0;
         std::stringstream ss(line);
         while (getline(ss, line2, ',')) {
+            std::ostringstream temp_ss;
+            temp_ss.precision(1);
             float line2_float = std::stof(line2);
-            data_s[features[i]].push_back(line2_float);
+            temp_ss << std::fixed << line2_float;
+            float fixed_float = std::stof(temp_ss.str());
+            //std::fixed << line2_float;
+            //std::fixed(line2_float);
+            //data_s[features[i]].push_back(line2_float);
+            data_s[features[i]].push_back(fixed_float);
             i++;
         }
     }

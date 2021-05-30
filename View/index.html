@@ -93,6 +93,7 @@
             resultLinear(feature);
         }
     }
+
     function resultLinear(feature) {
         var featureSplit = feature.split(",");
         var firstFeature = featureSplit[0];
@@ -105,6 +106,10 @@
             var points_x = map.get(firstFeature);
             maxX = Math.max.apply(null, points_x);
             minX = Math.min.apply(null, points_x);
+            if (!Number.isFinite(maxX) || !Number.isFinite(minX)) {
+                maxX = 0;
+                minX = 600;
+            }
         };
         xhttp0.open("POST", "/init/linear/dots", true);
         xhttp0.send()
@@ -124,6 +129,10 @@
                 const dataFromServer = JSON.parse(this.response);
                 for (let i = 0; i < dataFromServer.length; i++) {
                     if (dataFromServer[i].description === feature) {
+                        if (!Number.isFinite(dataFromServer[i].timeStep) ||
+                            !Number.isFinite(dataFromServer[i].Point.x) ||
+                            !Number.isFinite(dataFromServer[i].Point.y))
+                            continue;
                         timeStepArray.push(dataFromServer[i].timeStep);
                         xArray.push(dataFromServer[i].Point.x);
                         yArray.push(dataFromServer[i].Point.y);
@@ -145,11 +154,20 @@
             var map = new Map(JSON.parse(this.response));
             var points_x = map.get(firstFeature);
             var points_y = map.get(secondFeature);
-            trace2 = {
-                x: points_x,
-                y: points_y,
-                mode: 'markers'
-            };
+            var nan_flag = 0;
+            for (let i = 0; i < points_x.length; i++) {
+                if (!Number.isFinite(points_x[i]) || !Number.isFinite(points_y[i])) {
+                    nan_flag = 1;
+                    break;
+                }
+            }
+            if (!nan_flag) {
+                trace2 = {
+                    x: points_x,
+                    y: points_y,
+                    mode: 'markers'
+                };
+            }
         };
         xhttp3.open("POST", "/init/linear/dots", true);
         xhttp3.send()
@@ -168,17 +186,34 @@
 
                     const expression = expr;
                     const xValues = math.range(minX, maxX, 0.5).toArray()
-                    const yValues = xValues.map(function (x) {
-                        return expression.evaluate({x: x})
-                    })
-                    traceInit = {
-                        x: xValues,
-                        y: yValues,
-                        type: 'scatter'
+                    var nan_flag = 0;
+                    for (let i = 0; i < xValues.length; i++) {
+                        if (!Number.isFinite(xValues[i])) {
+                            nan_flag = 1;
+                            break;
+                        }
                     }
-                    var data = [trace1, traceInit, trace2];
-                    Plotly.newPlot('myDiv', data, layout)
-
+                    let yValues = [];
+                    if (!nan_flag) {
+                        yValues = xValues.map(function (x) {
+                            return expression.evaluate({x: x})
+                        })
+                    }
+                    for (let i = 0; i < yValues.length; i++) {
+                        if (!Number.isFinite(yValues[i])) {
+                            nan_flag = 1;
+                            break;
+                        }
+                    }
+                    if (!nan_flag) {
+                        traceInit = {
+                            x: xValues,
+                            y: yValues,
+                            type: 'scatter'
+                        }
+                        var data = [trace1, traceInit, trace2];
+                        Plotly.newPlot('myDiv', data, layout)
+                    }
                 } catch (err) {
                     console.error(err)
                     alert(err)
@@ -199,12 +234,11 @@
         xhttp0.onreadystatechange = async function () {
             var map = new Map(JSON.parse(this.response));
             var points_x = map.get(firstFeature);
-            try {
-                maxX = Math.max.apply(null, points_x);
-                minX = Math.min.apply(null, points_x);
-            } catch (err) {
-                console.error(err)
-                alert(err)
+            maxX = Math.max.apply(null, points_x);
+            minX = Math.min.apply(null, points_x);
+            if (!Number.isFinite(maxX) || !Number.isFinite(minX)) {
+                maxX = 0;
+                minX = 600;
             }
         };
         xhttp0.open("POST", "/init/hybrid/dots", true);
@@ -225,13 +259,13 @@
                 const dataFromServer = JSON.parse(this.response);
                 for (let i = 0; i < dataFromServer.length; i++) {
                     if (dataFromServer[i].description === feature) {
-                        if (Number.isFinite(dataFromServer[i].timeStep)) {
-                            timeStepArray.push(dataFromServer[i].timeStep);
-                        }
-                        if (Number.isFinite(dataFromServer[i].Point.x) && Number.isFinite(dataFromServer[i].Point.y)) {
-                            xArray.push(dataFromServer[i].Point.x);
-                            yArray.push(dataFromServer[i].Point.y);
-                        }
+                        if (!Number.isFinite(dataFromServer[i].timeStep) ||
+                            !Number.isFinite(dataFromServer[i].Point.x) ||
+                            !Number.isFinite(dataFromServer[i].Point.y))
+                            continue;
+                        timeStepArray.push(dataFromServer[i].timeStep);
+                        xArray.push(dataFromServer[i].Point.x);
+                        yArray.push(dataFromServer[i].Point.y);
                     }
                 }
                 trace1 = {
@@ -257,7 +291,7 @@
                     break;
                 }
             }
-            if (nan_flag === 0) {
+            if (!nan_flag) {
                 trace2 = {
                     x: points_x,
                     y: points_y,
@@ -284,6 +318,7 @@
                                 xMinus = dataFromServer2[i].point.xMinus;
                                 yPlus =  dataFromServer2[i].point.yPlus;
                                 yMinus =  dataFromServer2[i].point.yMinus;
+                                break;
                             }
                         }
                     }
@@ -291,16 +326,34 @@
                     const expression = expr;
                     if (expression != null) {
                         const xValues = math.range(minX, maxX, 0.5).toArray()
-                        const yValues = xValues.map(function (x) {
-                            return expression.evaluate({x: x})
-                        })
-                        traceInit = {
-                            x: xValues,
-                            y: yValues,
-                            type: 'scatter'
+                        var nan_flag = 0;
+                        for (let i = 0; i < xValues.length; i++) {
+                            if (!Number.isFinite(xValues[i])) {
+                                nan_flag = 1;
+                                break;
+                            }
                         }
-                        var data = [trace1, traceInit, trace2];
-                        Plotly.newPlot('myDiv', data, layout);
+                        let yValues = [];
+                        if (!nan_flag) {
+                            yValues = xValues.map(function (x) {
+                                return expression.evaluate({x: x})
+                            })
+                        }
+                        for (let i = 0; i < yValues.length; i++) {
+                            if (!Number.isFinite(yValues[i])) {
+                                nan_flag = 1;
+                                break;
+                            }
+                        }
+                        if (!nan_flag) {
+                            traceInit = {
+                                x: xValues,
+                                y: yValues,
+                                type: 'scatter'
+                            }
+                            var data = [trace1, traceInit, trace2];
+                            Plotly.newPlot('myDiv', data, layout);
+                        }
                     } else {
                         if (Number.isFinite(xMinus) && Number.isFinite(xPlus) && Number.isFinite(yMinus) && Number.isFinite(yPlus)) {
                             var layout = {
@@ -329,11 +382,10 @@
                                     }
                                 ]
                             };
+                            data = [trace1, trace2];
+                            Plotly.newPlot('myDiv', data, layout);
                         }
-                        var data = [trace1, trace2];
-                        Plotly.newPlot('myDiv', data, layout);
                     }
-
                 } catch (err) {
                     console.error(err)
                     alert(err)
@@ -402,7 +454,7 @@
         var text, i;
         text = "<ul>";
         for (i = 0; i < timeStepArray.length; i++) {
-            if (Number.isFinite(xArray[i]) && Number.isFinite(yArray[i]))
+            if (Number.isFinite(xArray[i]) && Number.isFinite(yArray[i]) && Number.isFinite(timeStepArray[i]))
                 text += "<li>" + "timeStep: " + timeStepArray[i] + "\t\t (" + xArray[i].toFixed(2) + "," + yArray[i].toFixed(2) + ")" + "</li>";
         }
         text += "</ul>";

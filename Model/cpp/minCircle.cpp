@@ -14,7 +14,8 @@ using namespace std;
 float dist(Point a, Point b){
 	float x2=(a.x-b.x)*(a.x-b.x);
 	float y2=(a.y-b.y)*(a.y-b.y);
-	return sqrt(x2+y2);
+	float temp = abs(x2+y2);
+	return sqrt(temp);
 }
 /*
  * Calculating the middle point between those two points
@@ -36,16 +37,29 @@ Circle from2points(Point a,Point b){
  * (3): x3^2 + y3^2 +2gx3 + 2fy3 + c = 0
  */
 Circle from3Points(Point a, Point b, Point c){
+
 	// find the circumcenter of the triangle a,b,c
 	Point mAB((a.x+b.x)/2 , (a.y+b.y)/2); // mid point of line AB
-	float slopAB = (b.y - a.y) / (b.x - a.x); // the slop of AB
-	float pSlopAB = - 1/slopAB; // the perpendicular slop of AB
+	float temp = (b.x - a.x);
+	if (temp == 0)
+	    temp = 0.01;
+	float slopAB = (b.y - a.y) / temp; // the slop of AB
+	temp = slopAB;
+	if (temp == 0)
+        temp = 0.01;
+	float pSlopAB = - 1/temp; // the perpendicular slop of AB
 	// pSlop equation is:
 	// y - mAB.y = pSlopAB * (x - mAB.x) ==> y = pSlopAB * (x - mAB.x) + mAB.y
 
 	Point mBC((b.x+c.x)/2 , (b.y+c.y)/2); // mid point of line BC
-	float slopBC = (c.y - b.y) / (c.x - b.x); // the slop of BC
-	float pSlopBC = - 1/slopBC; // the perpendicular slop of BC
+	temp = (c.x - b.x);
+	if (temp == 0)
+    	temp = 0.01;
+	float slopBC = (c.y - b.y) / temp; // the slop of BC
+	temp = slopAB;
+    if (temp == 0)
+        temp = 0.01;
+	float pSlopBC = - 1/temp; // the perpendicular slop of BC
 	// pSlop equation is:
 	// y - mBC.y = pSlopBC * (x - mBC.x) ==> y = pSlopBC * (x - mBC.x) + mBC.y
 
@@ -57,13 +71,15 @@ Circle from3Points(Point a, Point b, Point c){
 	x = (- pSlopBC*mBC.x + mBC.y + pSlopAB*mAB.x - mAB.y) / (pSlopAB - pSlopBC);
 
 	*/
-
-	float x = (- pSlopBC*mBC.x + mBC.y + pSlopAB*mAB.x - mAB.y) / (pSlopAB - pSlopBC);
+    temp = (pSlopAB - pSlopBC);
+    if (temp == 0)
+        temp = 0.01;
+	float x = (- pSlopBC*mBC.x + mBC.y + pSlopAB*mAB.x - mAB.y) / temp;
 	float y = pSlopAB * (x - mAB.x) + mAB.y;
 	Point center(x,y);
 	float R=dist(center,a);
-
 	return Circle(center,R);
+
 }
 
 /*
@@ -81,7 +97,7 @@ Circle trivial(vector<Point>& P){
 	if(P.size()==0)
 		return Circle(Point(0,0),0);
 	else if(P.size()==1)
-		return Circle(P[0],0);
+	    return Circle(P[0],0);
 	else if (P.size()==2)
 		return from2points(P[0],P[1]);
 

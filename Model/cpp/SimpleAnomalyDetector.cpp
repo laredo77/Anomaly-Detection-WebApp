@@ -64,10 +64,12 @@ void SimpleAnomalyDetector::learnNormal(const TimeSeries &ts) {
                 } else {
                     // get minimal circle
                     Circle c = findMinCircle(ps, data_s[time_series.get_features()[i]].size());
-                    cfs.threshold = c.radius * 1.1;
-                    cfs.x = c.center.x;
-                    cfs.y = c.center.y;
-                    cfs.radius = c.radius;
+                    if (isfinite(c.center.x) && isfinite(c.center.x) && isfinite(c.radius)) {
+                        cfs.threshold = c.radius * 1.1;
+                        cfs.x = c.center.x;
+                        cfs.y = c.center.y;
+                        cfs.radius = c.radius;
+                    }
                 }
                 // initialize the rest of the correlationFeatures struct
                 cfs.feature1 = time_series.get_features()[i];
