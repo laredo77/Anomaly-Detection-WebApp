@@ -1,3 +1,4 @@
+![WebApp](https://user-images.githubusercontent.com/60240620/120111208-ba8df080-c179-11eb-8cc6-21dfe8d22fce.jpg)
 # Anomaly Detection Server WebApp
 WebApp application for flight investigation.
  
@@ -19,7 +20,7 @@ To display the result, the user must have 2 csv files that contain the flight da
 Then you are able to run the command `node ./Controller/server.js` in order to run the app.
 
 ### Usage
-![WebApp](https://user-images.githubusercontent.com/60240620/119850225-05a7c980-bf16-11eb-819d-24faab9857c5.jpg)
+![WebApp](https://user-images.githubusercontent.com/60240620/120111192-a9dd7a80-c179-11eb-9d86-a20ce6bc644a.jpg)
 
 Run the program and use your favorite browser. Connect to the URL: http://localhost:8080/
 Using the dedicated button, upload the csv file with the fligth data to the server to have the algorithm learn the normal state.
