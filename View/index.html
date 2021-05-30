@@ -43,14 +43,12 @@
            onclick="setIsLinear(0);generateHybridFeatures(); disableAlgoMenu(); choseAlgo('Hybrid algorithm was chosen.  Please choose an option:');sendAlgo('Hybrid')">Hybrid
             algorithm</a>
     </div>
-    <div class="Container" id="container">
-        <label id="algoNameLabel" class="labels"></label>
-        <select id="select" onchange="resultOfSelectedFeature()"></select>
-        <label id="labelselected" class="labels"></label>
-        <div id="anomalies" class="anomalies">
-            <a class="active">Anomalies:</a>
-            <a id="anomaliesText"></a>
-        </div>
+        <label class = "label1" id="algoNameLabel" class="labels"></label>
+        <select id="select"  class = "select" onchange="resultOfSelectedFeature()"></select>
+<!--        <label id="labelselected" class="labels"></label>-->
+    <div id="anomalies" class="anomalies">
+        <a class="active">Anomalies:</a>
+        <a id="anomaliesText"></a>
     </div>
     <br>
 </div>

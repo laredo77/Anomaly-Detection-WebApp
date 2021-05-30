@@ -94,15 +94,25 @@ div.Algo-menu{
     background-repeat: no-repeat;
     background-size: cover;
 }
-div.Container {
+/*div.Container {*/
+/*    position: fixed;*/
+/*    top: 520px;*/
+/*    left: 10px;*/
+/*}*/
+label.label1{
+    color: #eeeeee;
     position: fixed;
     top: 520px;
+    left: 10px;
+}
+select.select{
+    position: fixed;
+    top: 540px;
     left: 10px;
 }
 label.labels{
     color: #eeeeee;
 }
-
 iframe.iframeClass{
     border: 0px;
 }

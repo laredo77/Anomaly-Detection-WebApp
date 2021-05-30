@@ -224,7 +224,7 @@
             // from vector
 
             for (int i = 0; i < value.second.size(); i++) {
-                if (isfinite(value.second[i])) {
+                if (finite(value.second[i])) {
                     array_js->Set(i, Number::New(isolate, value.second[i]));
                 }
             }
