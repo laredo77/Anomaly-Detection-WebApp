@@ -47,9 +47,6 @@ div.Feature-menu{
     background-color: #4e004e;
     color: white;
 }
-
-
-
 .anomalies {
     width: 300px;
     height: 300px;
@@ -70,7 +67,7 @@ div.Feature-menu{
 }
 div.anomalies{
     position: fixed;
-    top: 240px;
+    top: 200px;
     left: 10px;
 }
 body, html {
@@ -86,7 +83,7 @@ div.relative {
 }
 div.Algo-menu{
     position: fixed;
-    top: 240px;
+    top: 200px;
     left: 420px;
 }
 
@@ -99,7 +96,7 @@ div.Algo-menu{
 }
 div.Container {
     position: fixed;
-    top: 200px;
+    top: 520px;
     left: 10px;
 }
 label.labels{
