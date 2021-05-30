@@ -1,7 +1,8 @@
-![WebApp](https://user-images.githubusercontent.com/60240620/120111208-ba8df080-c179-11eb-8cc6-21dfe8d22fce.jpg)
 # Anomaly Detection Server WebApp
 WebApp application for flight investigation.
- 
+
+![WebApp](https://user-images.githubusercontent.com/60240620/120111208-ba8df080-c179-11eb-8cc6-21dfe8d22fce.jpg)
+
 ### Description
 The Anomaly detection server web app is a tool designed to investigate flights. With this app, flight investigators are able to examine the data of their flight and make sure that it was normal or to detect any anomalies in the flight that may have happened.
 The data are presented by a graph of a line based linear-regression or a minimum encloser circle which are calculated from the features of the plane that correlate.
