@@ -34,7 +34,9 @@ The algorithm calculates the distance of the furthest point from the center poin
 **Every time you want to choose an algorithm you must first upload files and then press the submit button.**
 
 Now, a dedicated graph will open for the user showing the data and the anomalies.
-The investigator can select the features that were received as correlating from the list of features. Each pair of features will display their own graph and their deviation points according to the chosen algorithm detected. As well as a list of deviations by times.
+The investigator can select the features that were received as correlating from the list of features. 
+**Each time you want to choose a feature you must wait few seconds before choosing it.**
+Each pair of features will display their own graph and their deviation points according to the chosen algorithm detected. As well as a list of deviations by times.
 
 In addition, the user can upload new files whenever they wish and re-investegate without closing and restarting the app.
 
@@ -42,7 +44,7 @@ In addition, the user can upload new files whenever they wish and re-investegate
 >* Users can send HTTP Post request via any programming language. The request contains the algorithm they want to use and the contents of the csv files.
 The users will recive a JSON object containing the anomalies.
 
-You can also see our YouTube video at https://www.youtube.com/watch?v=j63nNYKmACA in which we explain about the app.
+You can also see our YouTube video at https://www.youtube.com/watch?v=1_t5mCzuYlo in which we explain about the app (you can switch to HD quality).
 
 ### Dictionary
 Folders of the project 
